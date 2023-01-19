@@ -14,6 +14,7 @@ The app must be multi-purposful and allow the user to determine the list feel.
 
 # Requirments
 
+<table>
 <tr>
 	<th> Must Have </th>
 	<th> Structured Data Model </th>
@@ -48,5 +49,6 @@ The app must be multi-purposful and allow the user to determine the list feel.
 	<th> Won't Have </th>
 	<th> Admin Functionality </th>
 </tr>
+</table>
 
 
