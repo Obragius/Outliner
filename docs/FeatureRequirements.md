@@ -16,39 +16,186 @@ The app must be multi-purposful and allow the user to determine the list feel.
 
 <table>
 <tr>
-	<th><b>Must Have</b></th>
-	<th> Structured Data Model </th>
-	<th> Use Best Practises </th>
-	<th> Add New Section </th>
-	<th> Add a Sub Section </th>
+	<th> Must Have  </th>
+	<th> R1 - Structured Data Model </th>
+	<th> R2 - Use Best Practises </th>
+	<th> R3 - Add New Section </th>
+	<th> R4 - Add a Sub Section </th>
 </tr>
 <tr>
-	<th><b>Should Have</b></th>
-	<th> Documentation </th>
-	<th> Implement GUI </th>
-	<th> OO Design </th>
-	<th> Edit Section </th>
-	<th> Delete Section </th>
-	<th> Mark Section Complete </th>
-	<th> Edit Subsection </th>
-	<th> Delete Subsection </th>
-	<th> Save to a file </th>
-	<th> Load from a file </th>
+	<th> Should Have  </th>
+	<th> R5 - Documentation </th>
+	<th> R6 - Implement GUI </th>
+	<th> R7 - OO Design </th>
+	<th> R8 - Edit Section </th>
+	<th> R9 - Delete Section </th>
+	<th> R10 - Mark Section Complete </th>
+	<th> R11 - Edit Subsection </th>
+	<th> R12 - Delete Subsection </th>
+	<th> R13 - Save to a file </th>
+	<th> R14 - Search func </th>
+	<th> R15 - Add a tag </th>
+	<th> R16 - Edit a tag </th>
+	<th> R17 - Sort Sections </th>
+	<th> R18 - Reorder Sections </th>
+	<th> R19 - Retrieve data from Web </th>
+	<th> R20 - Format Text </th>
 </tr>
 <tr>
-	<th><b>Could Have</b></th>
-	<th> Filter Search func </th>
-	<th> Add a tag </th>
-	<th> Edit a tag </th>
-	<th> Sort Sections </th>
-	<th> Reorder Sections </th>
-	<th> Retrieve data from Web </th>
-	<th> Format Text </th>
-</tr>
-<tr>
-	<th><b>Won't Have</b></th>
+	<th> Won't Have  </th>
 	<th> Admin Functionality </th>
 </tr>
 </table>
+
+# Detailed Requirements
+
+| **R1** | **Structured Data Model**|
+| ------ | ------------------------ |
+| **Description** | The project must conform to the UML diagram created and be able to store and retrieve data. It should be developed in NetBeans using Swing for the GUI elements and not use any frameworks |
+| ** | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+
+
+
+| **R1** | **Structured Data Model**|
+| ------ | ------------------------ |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+
+
+
+| **R1** | **Structured Data Model**|
+| ------ | ------------------------ |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+
+
+
+| **R1** | **Structured Data Model**|
+| ------ | ------------------------ |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+
+
+
+| **R1** | **Structured Data Model**|
+| ------ | ------------------------ |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+| | |
+
 
 
