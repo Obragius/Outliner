@@ -33,6 +33,9 @@ The app must be multi-purposful and allow the user to determine the list feel.
 	<th> R11 - Edit Subsection </th>
 	<th> R12 - Delete Subsection </th>
 	<th> R13 - Save to a file </th>
+</tr>
+<tr>
+	<th> Could Have </th>
 	<th> R14 - Search func </th>
 	<th> R15 - Add a tag </th>
 	<th> R16 - Edit a tag </th>
