@@ -16,14 +16,14 @@ The app must be multi-purposful and allow the user to determine the list feel.
 
 <table>
 <tr>
-	<th> Must Have </th>
+	<th><b>Must Have</b></th>
 	<th> Structured Data Model </th>
 	<th> Use Best Practises </th>
 	<th> Add New Section </th>
 	<th> Add a Sub Section </th>
 </tr>
 <tr>
-	<th> Should Have </th>
+	<th><b>Should Have</b></th>
 	<th> Documentation </th>
 	<th> Implement GUI </th>
 	<th> OO Design </th>
@@ -36,7 +36,7 @@ The app must be multi-purposful and allow the user to determine the list feel.
 	<th> Load from a file </th>
 </tr>
 <tr>
-	<th> Could Have </th>
+	<th><b>Could Have</b></th>
 	<th> Filter Search func </th>
 	<th> Add a tag </th>
 	<th> Edit a tag </th>
@@ -46,7 +46,7 @@ The app must be multi-purposful and allow the user to determine the list feel.
 	<th> Format Text </th>
 </tr>
 <tr>
-	<th> Won't Have </th>
+	<th><b>Won't Have</b></th>
 	<th> Admin Functionality </th>
 </tr>
 </table>
