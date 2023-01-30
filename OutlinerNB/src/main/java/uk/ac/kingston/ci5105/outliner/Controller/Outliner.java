@@ -15,21 +15,25 @@ public class Outliner {
     private static String name;
     private static String date;
     private static Section[] sections;
+    private static int sectionCount = 0;
     
     
     public static void main(String[] args)
     {
-        
+        Outliner.onStartUp();
     }
     
     public static void onStartUp()
     {
-        
+        // Create main parent section and make it empty
+        Outliner.createSection("",null,null,0,null);
     }
     
-    public static void createSection()
+    public static void createSection(String text,User[] user, String[] tag, int priority, Section[] content)
     {
-        
+        // Create a section using the provided parameters
+        // and give it a unqiue runtime id
+        Outliner.sections[0] = new Section(text, user, tag, priority, content, Outliner.sectionCount);
     }
 
     public static String getName() 
