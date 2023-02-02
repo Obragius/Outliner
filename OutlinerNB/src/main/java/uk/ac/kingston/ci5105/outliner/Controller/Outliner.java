@@ -30,7 +30,7 @@ public class Outliner {
         Outliner.createSection("",null,null,0,null);
     }
     
-    public static void createSection(String text,User[] user, String[] tag, int priority, Section[] content)
+    public static void createSection(String text,User[] user, String[] tag, int priority, ArrayList<Section> content)
     {
         // Create a section using the provided parameters
         // and give it a unqiue runtime id

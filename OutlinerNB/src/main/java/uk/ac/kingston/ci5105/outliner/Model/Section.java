@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package uk.ac.kingston.ci5105.outliner.Model;
+import java.util.ArrayList;
 
 /**
  *
@@ -14,10 +15,10 @@ public class Section {
     private User[] user;
     private String[] tag;
     private int priority;
-    private Section[] content;
+    private ArrayList<Section> content;
     private int id;
 
-    public Section(String text, User[] user, String[] tag, int priority, Section[] content, int id)
+    public Section(String text, User[] user, String[] tag, int priority, ArrayList<Section> content, int id)
     {
         this.text = text;
         this.user = user;
@@ -69,12 +70,12 @@ public class Section {
         this.priority = priority;
     }
 
-    public Section[] getContent() 
+    public ArrayList<Section> getContent() 
     {
         return content;
     }
 
-    public void setContent(Section[] content) 
+    public void setContent(ArrayList<Section> content) 
     {
         this.content = content;
     }
