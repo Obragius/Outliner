@@ -4,6 +4,7 @@
  */
 package uk.ac.kingston.ci5105.outliner.Controller;
 import uk.ac.kingston.ci5105.outliner.Model.*;
+import java.util.ArrayList;
 
 
 /**
@@ -14,7 +15,7 @@ public class Outliner {
     
     private static String name;
     private static String date;
-    private static Section[] sections;
+    private static ArrayList<Section> sections = new ArrayList();
     private static int sectionCount = 0;
     
     
@@ -33,7 +34,7 @@ public class Outliner {
     {
         // Create a section using the provided parameters
         // and give it a unqiue runtime id
-        Outliner.sections[0] = new Section(text, user, tag, priority, content, Outliner.sectionCount);
+        Outliner.sections.add(new Section(text, user, tag, priority, content, Outliner.sectionCount));
     }
 
     public static String getName() 
@@ -56,12 +57,12 @@ public class Outliner {
         Outliner.date = date;
     }
 
-    public static Section[] getSections() 
+    public static ArrayList<Section> getSections() 
     {
         return sections;
     }
 
-    public static void setSections(Section[] sections) 
+    public static void setSections(ArrayList<Section> sections) 
     {
         Outliner.sections = sections;
     }
