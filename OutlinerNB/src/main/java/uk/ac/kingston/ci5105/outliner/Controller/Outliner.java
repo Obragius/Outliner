@@ -27,14 +27,19 @@ public class Outliner {
     public static void onStartUp()
     {
         // Create main parent section and make it empty
-        Outliner.createSection("",null,null,0,null);
+        Outliner.createSection("",null,null,0);
     }
     
-    public static void createSection(String text,User[] user, String[] tag, int priority, ArrayList<Section> content)
+    public static void createSection(String text,User[] user, String[] tag, int priority)
     {
         // Create a section using the provided parameters
         // and give it a unqiue runtime id
-        Outliner.sections.add(new Section(text, user, tag, priority, content, Outliner.sectionCount));
+        Outliner.sections.add(new Section(text, user, tag, priority, new ArrayList(), Outliner.getSectionCount()));
+    }
+    
+    public static void deleteSection(int sectionID)
+    {
+        Outliner.sections.remove(sectionID);
     }
 
     public static String getName() 
@@ -66,6 +71,19 @@ public class Outliner {
     {
         Outliner.sections = sections;
     }
+    
+    public static int getSectionCount()
+    {
+        return Outliner.sectionCount;
+    }
+    
+    public static int setSectionCount()
+    {
+        int oldSectionCount = Outliner.sectionCount;
+        Outliner.sectionCount += 1;
+        return oldSectionCount;
+    }
+    
     
     
     

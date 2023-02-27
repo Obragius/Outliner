@@ -17,7 +17,7 @@ public class UnitTest extends TestCase{
     
     public static void createTopLevelSection() // Some code to create the section of the outliner
     {
-        Outliner.createSection("", null, null, 0, null);
+        Outliner.createSection("", null, null, 0);
     }
     
     public void testCreateSection() // Testing the creation of the initial section present in the outliner [R3]
@@ -30,7 +30,7 @@ public class UnitTest extends TestCase{
     {
         createTopLevelSection();
         Section testSection = Outliner.getSections().get(0);
-        testSection.createSubSection("",null,null,0,null);
+        testSection.createSubSection("",null,null,0);
         Assert.assertTrue(testSection.getContent().get(0) instanceof Section);
     }
     
@@ -65,7 +65,7 @@ public class UnitTest extends TestCase{
     {
         createTopLevelSection();
         Section testSection = Outliner.getSections().get(0);
-        testSection.createSubSection("",null,null,0,null);
+        testSection.createSubSection("",null,null,0);
         Section testSubSection = testSection.getContent().get(0);
         testSubSection.editText("TEST PACKAGE MESSAGE");
         Assert.assertEquals("TEST PACKAGE MESSAGE", testSubSection.getText());
@@ -75,7 +75,7 @@ public class UnitTest extends TestCase{
     {
         createTopLevelSection();
         Section testSection = Outliner.getSections().get(0);
-        testSection.createSubSection("",null,null,0,null);
+        testSection.createSubSection("",null,null,0);
         Section testSubSection = testSection.getContent().get(0);
         testSection.deleteSubSection(testSubSection.getId());
         Assert.assertFalse(testSection.getContent().contains(testSubSection));

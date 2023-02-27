@@ -4,6 +4,7 @@
  */
 package uk.ac.kingston.ci5105.outliner.Model;
 import java.util.ArrayList;
+import uk.ac.kingston.ci5105.outliner.Controller.Outliner;
 
 /**
  *
@@ -17,6 +18,7 @@ public class Section {
     private int priority;
     private ArrayList<Section> content;
     private int id;
+    private boolean complete;
 
     public Section(String text, User[] user, String[] tag, int priority, ArrayList<Section> content, int id)
     {
@@ -28,6 +30,30 @@ public class Section {
         this.id = id;
     }
     
+    public void createSubSection(String text, User[] user, String[] tag, int priority)
+    {
+       this.content.add(new Section(text, user, tag, priority, new ArrayList(), Outliner.getSectionCount()));
+    }
+    
+    public void editText(String textValue)
+    {
+        setText(textValue);
+    }
+    
+    public void markComplete(boolean value)
+    {
+        this.complete = value;
+    }
+    
+    public boolean isComplete()
+    {
+        return this.complete;
+    }
+    
+    public void deleteSubSection(int sectionID)
+    {
+        this.content.remove(sectionID);
+    }
     
 
     public String getText() 
