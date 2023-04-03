@@ -4,6 +4,7 @@
  */
 package uk.ac.kingston.ci5105.outliner.Controller;
 import uk.ac.kingston.ci5105.outliner.Model.*;
+import uk.ac.kingston.ci5105.outliner.View.*;
 import java.util.ArrayList;
 
 
@@ -13,9 +14,9 @@ import java.util.ArrayList;
  */
 public class Outliner {
     
-    private static String name;
-    private static String date;
-    private static ArrayList<Section> sections = new ArrayList();
+    private String name;
+    private String date;
+    private ArrayList<Section> sections = new ArrayList();
     private static int sectionCount = 0;
     
     
@@ -27,49 +28,59 @@ public class Outliner {
     public static void onStartUp()
     {
         // Create main parent section and make it empty
-        Outliner.createSection("",null,null,0);
+        Outliner Outline = new Outliner();
+        Outline.createSection("",null,null,0);
+        Outline.setName("My outline");
+        
+        Section firstSection = Outline.getSections().get(0);
+        firstSection.setText("I love dogs");
+        System.out.println(Outline.getSections().get(0).getText());
+        
+        
+        // Run the view
+        SwingGUI.main(null,Outline);
     }
     
-    public static void createSection(String text,User[] user, String[] tag, int priority)
+    public void createSection(String text,User[] user, String[] tag, int priority)
     {
         // Create a section using the provided parameters
         // and give it a unqiue runtime id
-        Outliner.sections.add(new Section(text, user, tag, priority, new ArrayList(), Outliner.getSectionCount()));
+        this.sections.add(new Section(text, user, tag, priority, new ArrayList(), this.getSectionCount()));
     }
     
-    public static void deleteSection(int sectionID)
+    public void deleteSection(int sectionID)
     {
-        Outliner.sections.remove(sectionID);
+        this.sections.remove(sectionID);
     }
 
-    public static String getName() 
+    public String getName() 
     {
-        return name;
+        return this.name;
     }
 
-    public static void setName(String name) 
+    public void setName(String name) 
     {
-        Outliner.name = name;
+        this.name = name;
     }
 
-    public static String getDate() 
+    public String getDate() 
     {
-        return date;
+        return this.date;
     }
 
-    public static void setDate(String date) 
+    public void setDate(String date) 
     {
-        Outliner.date = date;
+        this.date = date;
     }
 
-    public static ArrayList<Section> getSections() 
+    public ArrayList<Section> getSections() 
     {
-        return sections;
+        return this.sections;
     }
 
-    public static void setSections(ArrayList<Section> sections) 
+    public void setSections(ArrayList<Section> sections) 
     {
-        Outliner.sections = sections;
+        this.sections = sections;
     }
     
     public static int getSectionCount()

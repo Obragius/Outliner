@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package uk.ac.kingston.ci5105.outliner.View;
+import uk.ac.kingston.ci5105.outliner.Model.*;
+import uk.ac.kingston.ci5105.outliner.Controller.*;
 
 
 import java.util.List;
@@ -25,12 +27,12 @@ public class SwingGUI extends JFrame
     private JLabel myLabel2;
     private JLabel myLabel3;
     
-    public static void main(String[] args)
+    public static void main(String[] args, Outliner Outline)
     {
-        new SwingGUI();
+        new SwingGUI(Outline);
     }
     
-    public SwingGUI()
+    public SwingGUI(Outliner Outline)
     {
         // Basic setup for the frame
        this.myFrame = new JFrame();
@@ -40,11 +42,11 @@ public class SwingGUI extends JFrame
        
        
        this.myLabel = new JLabel();
-       this.myLabel.setText("Hello");
+       this.myLabel.setText(Outline.getSections().get(0).getText());
        this.myLabel2 = new JLabel();
-       this.myLabel2.setText("Hello");
+       this.myLabel2.setText(Outline.getSections().get(0).getText());
        this.myLabel3 = new JLabel();
-       this.myLabel3.setText("Hello");
+       this.myLabel3.setText(Outline.getSections().get(0).getText());
        
        
        this.myPanel = new JPanel();
