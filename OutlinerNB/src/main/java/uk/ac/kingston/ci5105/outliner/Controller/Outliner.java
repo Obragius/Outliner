@@ -29,12 +29,9 @@ public class Outliner {
     {
         // Create main parent section and make it empty
         Outliner Outline = new Outliner();
-        Outline.createSection("",null,null,0);
+        Outline.createSection("I love dogs",null,null,0);
+        Outline.createSection("I love cats",null,null,0);
         Outline.setName("My outline");
-        
-        Section firstSection = Outline.getSections().get(0);
-        firstSection.setText("I love dogs");
-        System.out.println(Outline.getSections().get(0).getText());
         
         
         // Run the view

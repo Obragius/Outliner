@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package uk.ac.kingston.ci5105.outliner.View;
+import java.util.ArrayList;
 import uk.ac.kingston.ci5105.outliner.Model.*;
 import uk.ac.kingston.ci5105.outliner.Controller.*;
 
@@ -23,9 +24,7 @@ public class SwingGUI extends JFrame
     private JFrame myFrame;
     private JTextArea myText;
     private JPanel myPanel;
-    private JLabel myLabel;
-    private JLabel myLabel2;
-    private JLabel myLabel3;
+    private ArrayList<JLabel> allJLabels;
     
     public static void main(String[] args, Outliner Outline)
     {
@@ -40,25 +39,64 @@ public class SwingGUI extends JFrame
        this.myFrame.setSize(600,1200);
        this.myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        
-       
-       this.myLabel = new JLabel();
-       this.myLabel.setText(Outline.getSections().get(0).getText());
-       this.myLabel2 = new JLabel();
-       this.myLabel2.setText(Outline.getSections().get(0).getText());
-       this.myLabel3 = new JLabel();
-       this.myLabel3.setText(Outline.getSections().get(0).getText());
-       
+       allJLabels = constructJLabel(Outline); 
        
        this.myPanel = new JPanel();
        this.myPanel.setLayout(new BoxLayout(this.myPanel, BoxLayout.Y_AXIS));
-       this.myPanel.add(this.myLabel);
-       this.myPanel.add(this.myLabel2);
-       this.myPanel.add(this.myLabel3);
+       
+       for (int i = 0; i < allJLabels.size(); i++)
+       {
+           this.myPanel.add(allJLabels.get(i));
+       }
+       
        
        this.myFrame.add(this.myPanel);
        
        this.myFrame.setVisible(true);
        
+    }
+    
+    public ArrayList<JLabel> constructJLabel(Outliner Outline)
+    {
+        if (Outline.getSections().size() == 0)
+        {
+            return null;
+        }
+        else
+        {
+            ArrayList myLabelList = new ArrayList();
+            for (int i = 0; i < Outline.getSections().size();i++)
+            {
+                myLabelList.addAll(this.constructSectionJLabel(Outline.getSections().get(i)));
+            }
+            return myLabelList;
+        }
+    }
+    
+    public ArrayList<JLabel> constructSectionJLabel(Section givenSection)
+    {
+        if (givenSection.getContent().size() == 0)
+        {
+            JLabel myLabel = new JLabel();
+            myLabel.setText(givenSection.getText());
+            ArrayList myLabelList = new ArrayList();
+            myLabelList.add(myLabel);
+            return myLabelList;
+        }
+        else
+        {
+            ArrayList mySubLabelList = new ArrayList();
+            for (int i = 0; i < givenSection.getContent().size();i++)
+            {
+                mySubLabelList.addAll(this.constructSectionJLabel(givenSection.getContent().get(i)));
+            }
+            JLabel myLabel = new JLabel();
+            myLabel.setText(givenSection.getText());
+            ArrayList myLabelList = new ArrayList();
+            myLabelList.add(myLabel);
+            myLabelList.addAll(mySubLabelList);
+            return myLabelList;
+        }
     }
     
 }
