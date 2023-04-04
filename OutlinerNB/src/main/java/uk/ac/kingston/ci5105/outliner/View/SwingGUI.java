@@ -29,6 +29,7 @@ public class SwingGUI extends JFrame implements MouseListener
     private JTextArea myText;
     private JPanel myPanel;
     private ArrayList<JLabel> allJLabels;
+    private Outliner myOutline;
     
     public static void main(String[] args, Outliner Outline)
     {
@@ -42,15 +43,16 @@ public class SwingGUI extends JFrame implements MouseListener
        this.myFrame.setTitle("Outliner");
        this.myFrame.setSize(600,1200);
        this.myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       this.myOutline = Outline;
        
-       reDrawScreen(Outline);
+       reDrawScreen();
        
     }
     
-    public void reDrawScreen(Outliner Outline)
+    public void reDrawScreen()
     {
        // Get all jlabels using the two recursive methods
-       allJLabels = constructJLabel(Outline); 
+       allJLabels = constructJLabel(); 
        
        this.myPanel = new JPanel();
        this.myPanel.setLayout(new BoxLayout(this.myPanel, BoxLayout.Y_AXIS));
@@ -66,10 +68,10 @@ public class SwingGUI extends JFrame implements MouseListener
        this.myFrame.setVisible(true);
     }
     
-    public ArrayList<JLabel> constructJLabel(Outliner Outline)
+    public ArrayList<JLabel> constructJLabel()
     {
         // If the outline is empty return nothing
-        if (Outline.getSections().size() == 0)
+        if (this.myOutline.getSections().size() == 0)
         {
             return null;
         }
@@ -77,9 +79,9 @@ public class SwingGUI extends JFrame implements MouseListener
         else
         {
             ArrayList myLabelList = new ArrayList();
-            for (int i = 0; i < Outline.getSections().size();i++)
+            for (int i = 0; i < this.myOutline.getSections().size();i++)
             {
-                myLabelList.addAll(this.constructSectionJLabel(Outline.getSections().get(i),0));
+                myLabelList.addAll(this.constructSectionJLabel(this.myOutline.getSections().get(i),0));
             }
             return myLabelList;
         }
@@ -95,6 +97,10 @@ public class SwingGUI extends JFrame implements MouseListener
             }
         JLabel myLabel = new JLabel();
         myLabel.setOpaque(true);
+        if (givenSection.isSelected())
+        {
+            myLabel.setBackground(Color.red);
+        }
         myLabel.setText(addedText+givenSection.getText());
         myLabel.addMouseListener(this);
         Integer id = givenSection.getId();
@@ -123,8 +129,12 @@ public class SwingGUI extends JFrame implements MouseListener
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        System.out.println("Clicked");
         Component firedLabel = e.getComponent();
         System.out.println(firedLabel.getName()); 
+        Section mySection = this.myOutline.getAllSections().get(Integer.parseInt(firedLabel.getName()));
+        mySection.markSelected();
+        reDrawScreen();
     }
 
     @Override

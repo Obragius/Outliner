@@ -17,6 +17,7 @@ public class Outliner {
     private String name;
     private String date;
     private ArrayList<Section> sections = new ArrayList();
+    private static ArrayList<Section> allSections = new ArrayList();
     private static int sectionCount = 0;
     
     
@@ -47,8 +48,10 @@ public class Outliner {
     {
         // Create a section using the provided parameters
         // and give it a unqiue runtime id
-        this.sections.add(new Section(text, user, tag, priority, new ArrayList(), this.getSectionCount(), 0));
+        Section newSection = new Section(text, user, tag, priority, new ArrayList(), this.getSectionCount(), 0);
+        this.sections.add(newSection);
         Outliner.setSectionCount();
+        Outliner.addSection(newSection);
     }
     
     public void deleteSection(int sectionID)
@@ -75,7 +78,22 @@ public class Outliner {
     {
         this.date = date;
     }
-
+    
+    public static void addSection(Section section)
+    {
+        Outliner.allSections.add(section);
+    }
+    
+    public static void removeSection(Section section)
+    {
+        Outliner.allSections.remove(section);
+    }
+    
+    public static ArrayList<Section> getAllSections()
+    {
+        return Outliner.allSections;
+    }
+    
     public ArrayList<Section> getSections() 
     {
         return this.sections;

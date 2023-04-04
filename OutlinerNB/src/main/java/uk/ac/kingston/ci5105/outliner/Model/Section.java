@@ -20,6 +20,7 @@ public class Section {
     private int id;
     private boolean complete;
     private int level;
+    private boolean selected;
 
     public Section(String text, User[] user, String[] tag, int priority, ArrayList<Section> content, int id, int level)
     {
@@ -30,12 +31,15 @@ public class Section {
         this.content = content;
         this.id = id;
         this.level = level;
+        this.selected = false;
     }
     
     public void createSubSection(String text, User[] user, String[] tag, int priority)
     {
-       this.content.add(new Section(text, user, tag, priority, new ArrayList(), Outliner.getSectionCount(),this.level+1));
+       Section newSection = new Section(text, user, tag, priority, new ArrayList(), Outliner.getSectionCount(),this.level+1);
+       this.content.add(newSection);
        Outliner.setSectionCount();
+       Outliner.addSection(newSection);
     }
     
     public void editText(String textValue)
@@ -51,6 +55,21 @@ public class Section {
     public boolean isComplete()
     {
         return this.complete;
+    }
+    
+    public void markSelected()
+    {
+        this.selected = true;
+    }
+    
+    public boolean isSelected()
+    {
+        return this.selected;
+    }
+    
+    public void unSelect()
+    {
+        this.selected = false;
     }
     
     public void deleteSubSection(int sectionID)
