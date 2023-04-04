@@ -35,6 +35,7 @@ public class Section {
     public void createSubSection(String text, User[] user, String[] tag, int priority)
     {
        this.content.add(new Section(text, user, tag, priority, new ArrayList(), Outliner.getSectionCount(),this.level+1));
+       Outliner.setSectionCount();
     }
     
     public void editText(String textValue)

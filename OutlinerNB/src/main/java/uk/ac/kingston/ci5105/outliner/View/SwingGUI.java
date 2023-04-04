@@ -3,6 +3,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package uk.ac.kingston.ci5105.outliner.View;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import uk.ac.kingston.ci5105.outliner.Model.*;
 import uk.ac.kingston.ci5105.outliner.Controller.*;
@@ -19,7 +23,7 @@ import javax.swing.JPanel;
  *
  * @author lolki
  */
-public class SwingGUI extends JFrame 
+public class SwingGUI extends JFrame implements MouseListener
 {
     private JFrame myFrame;
     private JTextArea myText;
@@ -89,11 +93,15 @@ public class SwingGUI extends JFrame
             {
                 addedText += "      ";
             }
+        JLabel myLabel = new JLabel();
+        myLabel.setOpaque(true);
+        myLabel.setText(addedText+givenSection.getText());
+        myLabel.addMouseListener(this);
+        Integer id = givenSection.getId();
+        myLabel.setName(id.toString());
         // If the section doesn't have child nodes, only return this section text
         if (givenSection.getContent().size() == 0)
         {
-            JLabel myLabel = new JLabel();
-            myLabel.setText(addedText+givenSection.getText());
             ArrayList myLabelList = new ArrayList();
             myLabelList.add(myLabel);
             return myLabelList;
@@ -106,13 +114,33 @@ public class SwingGUI extends JFrame
             {
                 mySubLabelList.addAll(this.constructSectionJLabel(givenSection.getContent().get(i),level+1));
             }
-            JLabel myLabel = new JLabel();
-            myLabel.setText(addedText+givenSection.getText());
             ArrayList myLabelList = new ArrayList();
             myLabelList.add(myLabel);
             myLabelList.addAll(mySubLabelList);
             return myLabelList;
         }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        Component firedLabel = e.getComponent();
+        System.out.println(firedLabel.getName()); 
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
     }
     
 }

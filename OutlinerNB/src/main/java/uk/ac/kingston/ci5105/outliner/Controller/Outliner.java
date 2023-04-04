@@ -29,13 +29,13 @@ public class Outliner {
     {
         // Create main parent section and make it empty
         Outliner Outline = new Outliner();
-        Outline.createSection("I love dogs",null,null,0);
+        Outline.createSection("I love dogs",null,null,Outliner.sectionCount);
         Section firstSection = Outline.getSections().get(0);
-        firstSection.createSubSection("I love cute dogs", null, null, sectionCount);
+        firstSection.createSubSection("I love cute dogs", null, null, Outliner.sectionCount);
         Section secondSection = firstSection.getContent().get(0);
-        secondSection.createSubSection("Cute dogs are the best", null, null, sectionCount);
-        firstSection.createSubSection("Cute dogs are great", null, null, sectionCount);
-        Outline.createSection("I love cats",null,null,0);
+        secondSection.createSubSection("Cute dogs are the best", null, null, Outliner.sectionCount);
+        firstSection.createSubSection("Cute dogs are great", null, null, Outliner.sectionCount);
+        Outline.createSection("I love cats",null,null,Outliner.sectionCount);
         Outline.setName("My outline");
         
         
@@ -48,6 +48,7 @@ public class Outliner {
         // Create a section using the provided parameters
         // and give it a unqiue runtime id
         this.sections.add(new Section(text, user, tag, priority, new ArrayList(), this.getSectionCount(), 0));
+        Outliner.setSectionCount();
     }
     
     public void deleteSection(int sectionID)
