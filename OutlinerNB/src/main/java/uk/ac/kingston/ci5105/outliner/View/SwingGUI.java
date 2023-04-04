@@ -39,6 +39,13 @@ public class SwingGUI extends JFrame
        this.myFrame.setSize(600,1200);
        this.myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        
+       reDrawScreen(Outline);
+       
+    }
+    
+    public void reDrawScreen(Outliner Outline)
+    {
+       // Get all jlabels using the two recursive methods
        allJLabels = constructJLabel(Outline); 
        
        this.myPanel = new JPanel();
@@ -53,15 +60,16 @@ public class SwingGUI extends JFrame
        this.myFrame.add(this.myPanel);
        
        this.myFrame.setVisible(true);
-       
     }
     
     public ArrayList<JLabel> constructJLabel(Outliner Outline)
     {
+        // If the outline is empty return nothing
         if (Outline.getSections().size() == 0)
         {
             return null;
         }
+        // Else for each top level section, return all the text it produces
         else
         {
             ArrayList myLabelList = new ArrayList();
@@ -75,11 +83,13 @@ public class SwingGUI extends JFrame
     
     public ArrayList<JLabel> constructSectionJLabel(Section givenSection, Integer level)
     {
+        // Construct the level indent text to add to all text in this level
         String addedText = "";
             for (int i = 0;i < level;i++)
             {
                 addedText += "      ";
             }
+        // If the section doesn't have child nodes, only return this section text
         if (givenSection.getContent().size() == 0)
         {
             JLabel myLabel = new JLabel();
@@ -88,6 +98,7 @@ public class SwingGUI extends JFrame
             myLabelList.add(myLabel);
             return myLabelList;
         }
+        // If the section has child nodes, return this section text and recursevly call this method
         else
         {
             ArrayList mySubLabelList = new ArrayList();
