@@ -19,8 +19,9 @@ public class Section {
     private ArrayList<Section> content;
     private int id;
     private boolean complete;
+    private int level;
 
-    public Section(String text, User[] user, String[] tag, int priority, ArrayList<Section> content, int id)
+    public Section(String text, User[] user, String[] tag, int priority, ArrayList<Section> content, int id, int level)
     {
         this.text = text;
         this.user = user;
@@ -28,11 +29,12 @@ public class Section {
         this.priority = priority;
         this.content = content;
         this.id = id;
+        this.level = level;
     }
     
     public void createSubSection(String text, User[] user, String[] tag, int priority)
     {
-       this.content.add(new Section(text, user, tag, priority, new ArrayList(), Outliner.getSectionCount()));
+       this.content.add(new Section(text, user, tag, priority, new ArrayList(), Outliner.getSectionCount(),this.level+1));
     }
     
     public void editText(String textValue)

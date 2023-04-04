@@ -67,18 +67,23 @@ public class SwingGUI extends JFrame
             ArrayList myLabelList = new ArrayList();
             for (int i = 0; i < Outline.getSections().size();i++)
             {
-                myLabelList.addAll(this.constructSectionJLabel(Outline.getSections().get(i)));
+                myLabelList.addAll(this.constructSectionJLabel(Outline.getSections().get(i),0));
             }
             return myLabelList;
         }
     }
     
-    public ArrayList<JLabel> constructSectionJLabel(Section givenSection)
+    public ArrayList<JLabel> constructSectionJLabel(Section givenSection, Integer level)
     {
+        String addedText = "";
+            for (int i = 0;i < level;i++)
+            {
+                addedText += "      ";
+            }
         if (givenSection.getContent().size() == 0)
         {
             JLabel myLabel = new JLabel();
-            myLabel.setText(givenSection.getText());
+            myLabel.setText(addedText+givenSection.getText());
             ArrayList myLabelList = new ArrayList();
             myLabelList.add(myLabel);
             return myLabelList;
@@ -88,10 +93,10 @@ public class SwingGUI extends JFrame
             ArrayList mySubLabelList = new ArrayList();
             for (int i = 0; i < givenSection.getContent().size();i++)
             {
-                mySubLabelList.addAll(this.constructSectionJLabel(givenSection.getContent().get(i)));
+                mySubLabelList.addAll(this.constructSectionJLabel(givenSection.getContent().get(i),level+1));
             }
             JLabel myLabel = new JLabel();
-            myLabel.setText(givenSection.getText());
+            myLabel.setText(addedText+givenSection.getText());
             ArrayList myLabelList = new ArrayList();
             myLabelList.add(myLabel);
             myLabelList.addAll(mySubLabelList);
