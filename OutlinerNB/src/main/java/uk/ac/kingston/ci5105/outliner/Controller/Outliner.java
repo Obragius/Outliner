@@ -19,7 +19,7 @@ public class Outliner {
     private ArrayList<Section> sections = new ArrayList();
     private static ArrayList<Section> allSections = new ArrayList();
     private static int sectionCount = 0;
-    private static int sectionSelected;
+    private static int sectionSelected = -1;
     
     
     public static void main(String[] args)
@@ -83,6 +83,11 @@ public class Outliner {
     public static void setSelected(int id)
     {
         Outliner.sectionSelected = id;
+    }
+    
+    public static int getSelected()
+    {
+        return Outliner.sectionSelected;
     }
     
     public void resetSelected()

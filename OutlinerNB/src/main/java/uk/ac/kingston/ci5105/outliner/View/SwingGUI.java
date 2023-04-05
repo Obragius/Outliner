@@ -5,6 +5,8 @@
 package uk.ac.kingston.ci5105.outliner.View;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ import javax.swing.JPanel;
  *
  * @author lolki
  */
-public class SwingGUI extends JFrame implements MouseListener
+public class SwingGUI extends JFrame implements MouseListener, KeyListener
 {
     private JFrame myFrame;
     private JTextArea myText;
@@ -43,6 +45,7 @@ public class SwingGUI extends JFrame implements MouseListener
        this.myFrame.setTitle("Outliner");
        this.myFrame.setSize(600,1200);
        this.myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       this.myFrame.addKeyListener(this);
        this.myOutline = Outline;
        
        reDrawScreen();
@@ -153,6 +156,51 @@ public class SwingGUI extends JFrame implements MouseListener
 
     @Override
     public void mouseExited(MouseEvent e) {
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        keyHandler(e,1);
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        keyHandler(e,2);
+    }
+    
+    public void keyHandler(KeyEvent e, int keyDetector)
+    {
+        System.out.println(e.getKeyCode());
+        int sectionId = Outliner.getSelected();
+        if (sectionId != -1)
+        {
+            if (keyDetector == 1)
+            {
+                if (e.getKeyCode() > 40 && e.getKeyCode() < 144 || e.getKeyCode() == 32)
+                {
+                    Section mySection = Outliner.getAllSections().get(sectionId);
+                    String myOldText = mySection.getText();
+                    String myNewText = myOldText + e.getKeyChar();
+                    mySection.editText(myNewText);
+                    reDrawScreen();
+                }
+            }
+            else if (keyDetector == 2)
+            {
+                if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
+                {
+                    Section mySection = Outliner.getAllSections().get(sectionId);
+                    String myOldText = mySection.getText();
+                    String myNewText = myOldText.substring(0, myOldText.length()-1) ;
+                    mySection.editText(myNewText);
+                    reDrawScreen();
+                }
+            }
+        }
     }
     
 }
