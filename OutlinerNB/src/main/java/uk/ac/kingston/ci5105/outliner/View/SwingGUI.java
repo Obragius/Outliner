@@ -133,7 +133,9 @@ public class SwingGUI extends JFrame implements MouseListener
         Component firedLabel = e.getComponent();
         System.out.println(firedLabel.getName()); 
         Section mySection = this.myOutline.getAllSections().get(Integer.parseInt(firedLabel.getName()));
-        mySection.markSelected();
+        int sectionID = mySection.getId();
+        Outliner.setSelected(sectionID);
+        this.myOutline.resetSelected();
         reDrawScreen();
     }
 

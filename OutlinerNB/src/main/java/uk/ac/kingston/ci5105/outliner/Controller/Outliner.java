@@ -19,6 +19,7 @@ public class Outliner {
     private ArrayList<Section> sections = new ArrayList();
     private static ArrayList<Section> allSections = new ArrayList();
     private static int sectionCount = 0;
+    private static int sectionSelected;
     
     
     public static void main(String[] args)
@@ -77,6 +78,26 @@ public class Outliner {
     public void setDate(String date) 
     {
         this.date = date;
+    }
+    
+    public static void setSelected(int id)
+    {
+        Outliner.sectionSelected = id;
+    }
+    
+    public void resetSelected()
+    {
+       for (int i = 0; i < Outliner.sectionCount; i++)
+       {
+           if (i != Outliner.sectionSelected)
+           {
+               Outliner.allSections.get(i).unSelect();
+           }
+           else
+           {
+               Outliner.allSections.get(i).markSelected();
+           }
+       }
     }
     
     public static void addSection(Section section)
