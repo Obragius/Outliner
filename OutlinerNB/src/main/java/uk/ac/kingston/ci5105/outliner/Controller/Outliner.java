@@ -14,11 +14,19 @@ import java.util.ArrayList;
  */
 public class Outliner {
     
+    // Name of the outline object, this will be used as the default for saving
     private String name;
+    // This should be the date the object has been modified
     private String date;
+    // This contains Array of top level sections, which follow
+    // hyrearchi and contain child sub-sections
     private ArrayList<Section> sections = new ArrayList();
+    // This does not follow the hierachi and presents all 
+    // sections as they dispay in the GUI
     private static ArrayList<Section> allSections = new ArrayList();
+    // Keeps track of the number of sections in the outline
     private static int sectionCount = 0;
+    // Keeps track of the selected sections, so that it can be modified
     private static int sectionSelected = -1;
     
     
@@ -55,6 +63,7 @@ public class Outliner {
         Outliner.addSection(newSection);
     }
     
+    // Delete a top level section from the Outline object
     public void deleteSection(int sectionID)
     {
         this.sections.remove(sectionID);
@@ -79,7 +88,8 @@ public class Outliner {
     {
         this.date = date;
     }
-    
+   
+    // Sets the id of sections which is currently selected
     public static void setSelected(int id)
     {
         Outliner.sectionSelected = id;
@@ -90,6 +100,7 @@ public class Outliner {
         return Outliner.sectionSelected;
     }
     
+    // Changes the selected state boolean within the sections object
     public void resetSelected()
     {
        for (int i = 0; i < Outliner.sectionCount; i++)
@@ -135,6 +146,8 @@ public class Outliner {
         return Outliner.sectionCount;
     }
     
+    // Gives each section a unqiue ID, should not go down, as
+    // it may lead to two sections having the same id
     public static int setSectionCount()
     {
         int oldSectionCount = Outliner.sectionCount;

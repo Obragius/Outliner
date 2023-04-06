@@ -12,12 +12,19 @@ import uk.ac.kingston.ci5105.outliner.Controller.Outliner;
  */
 public class Section {
     
+    // This holds the text value of the section, the text that is being diplayed
     private String text;
+    // This is the user object which is related to this section
     private User[] user;
+    // This is array of tags which are associated with this section
     private String[] tag;
+    // This is the priority of the section
     private int priority;
+    // This arraylist contains all the child sections of this sections
     private ArrayList<Section> content;
+    // This is the unqiue id of the section so that it can easily be targeted
     private int id;
+    // This will display that the sections is complete in the gui
     private boolean complete;
     private int level;
     private boolean selected;

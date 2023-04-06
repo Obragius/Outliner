@@ -27,27 +27,40 @@ import javax.swing.JPanel;
  */
 public class SwingGUI extends JFrame implements MouseListener, KeyListener
 {
+    // Main frame of the program
     private JFrame myFrame;
+    // Unused text area, maybe needed later
     private JTextArea myText;
+    // The panel which contains all the labels with the sections
     private JPanel myPanel;
+    // ArrayList which contains all Jlabels, it is proceduraly generated
+    // by accessing the outliner object
     private ArrayList<JLabel> allJLabels;
+    // Holds the outline object so that it can be accessed
+    // anywhere within the class
     private Outliner myOutline;
+    // Boolean value to allow for backspace to be pressed down and
+    // work with keyTyped method
+    private boolean backspace;
     
     public static void main(String[] args, Outliner Outline)
     {
+        // Initiates the GUI object with the Outline provided
         new SwingGUI(Outline);
     }
     
     public SwingGUI(Outliner Outline)
     {
-        // Basic setup for the frame
+       // Basic setup for the frame
        this.myFrame = new JFrame();
        this.myFrame.setTitle("Outliner");
        this.myFrame.setSize(600,1200);
        this.myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       // While the frame is in focus, listen for key presses
        this.myFrame.addKeyListener(this);
+       // Set the object-wide outline object
        this.myOutline = Outline;
-       
+       // Call method to generate all the labels
        reDrawScreen();
        
     }
@@ -132,9 +145,8 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("Clicked");
+        // Code to select a section so that it can be edited
         Component firedLabel = e.getComponent();
-        System.out.println(firedLabel.getName()); 
         Section mySection = this.myOutline.getAllSections().get(Integer.parseInt(firedLabel.getName()));
         int sectionID = mySection.getId();
         Outliner.setSelected(sectionID);
@@ -160,6 +172,16 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
 
     @Override
     public void keyTyped(KeyEvent e) {
+        // Listens for backspace and removes characters if it is active
+        if (this.backspace)
+        {
+            int sectionId = Outliner.getSelected();
+            Section mySection = Outliner.getAllSections().get(sectionId);
+            String myOldText = mySection.getText();
+            String myNewText = myOldText.substring(0, myOldText.length()-1) ;
+            mySection.editText(myNewText);
+            reDrawScreen();
+        }
     }
 
     @Override
@@ -188,16 +210,16 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                     mySection.editText(myNewText);
                     reDrawScreen();
                 }
+                if (e.getKeyCode() ==  KeyEvent.VK_BACK_SPACE)
+                {
+                    this.backspace = true;
+                }
             }
             else if (keyDetector == 2)
             {
                 if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
                 {
-                    Section mySection = Outliner.getAllSections().get(sectionId);
-                    String myOldText = mySection.getText();
-                    String myNewText = myOldText.substring(0, myOldText.length()-1) ;
-                    mySection.editText(myNewText);
-                    reDrawScreen();
+                    this.backspace = false;
                 }
             }
         }
