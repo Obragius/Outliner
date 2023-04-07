@@ -5,6 +5,8 @@
 package uk.ac.kingston.ci5105.outliner.View;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -21,6 +23,7 @@ import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 /**
  *
  * @author lolki
@@ -42,11 +45,16 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     // Boolean value to allow for backspace to be pressed down and
     // work with keyTyped method
     private boolean backspace;
+    // to keep track of the type character
+    private boolean typeChar;
+    // to keep track of the index at which typing character is
+    private int typeIndex;
+    
     
     public static void main(String[] args, Outliner Outline)
     {
         // Initiates the GUI object with the Outline provided
-        new SwingGUI(Outline);
+        SwingGUI myGUI = new SwingGUI(Outline);
     }
     
     public SwingGUI(Outliner Outline)
@@ -60,6 +68,17 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        this.myFrame.addKeyListener(this);
        // Set the object-wide outline object
        this.myOutline = Outline;
+       
+       ActionListener controlTyper = new ActionListener() { 
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               keyTyper();
+           }
+       };
+       Timer typingSpace = new Timer(500, controlTyper);
+       typingSpace.setRepeats(true);
+       typingSpace.start();
+       
        // Call method to generate all the labels
        reDrawScreen();
        
@@ -151,6 +170,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         int sectionID = mySection.getId();
         Outliner.setSelected(sectionID);
         this.myOutline.resetSelected();
+        this.typeIndex = Outliner.getAllSections().get(sectionID).getText().length();
         reDrawScreen();
     }
 
@@ -172,15 +192,33 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
 
     @Override
     public void keyTyped(KeyEvent e) {
-        // Listens for backspace and removes characters if it is active
-        if (this.backspace)
+        int sectionId = Outliner.getSelected();
+        if (sectionId != -1)
         {
-            int sectionId = Outliner.getSelected();
-            Section mySection = Outliner.getAllSections().get(sectionId);
-            String myOldText = mySection.getText();
-            String myNewText = myOldText.substring(0, myOldText.length()-1) ;
-            mySection.editText(myNewText);
-            reDrawScreen();
+            // Check to remove the typing character before modifying string
+            if (this.typeChar)
+            {
+                Section mySection = Outliner.getAllSections().get(sectionId);
+                String myOldText = mySection.getText();
+                String leftText = myOldText.substring(0, this.typeIndex+1);
+                String rightText = myOldText.substring(this.typeIndex+1);
+                String myNewText = leftText.substring(0, leftText.length()-1)+rightText;
+                mySection.editText(myNewText);
+                this.typeChar = false;
+            }
+            // Update type index after the typing character has been removed
+             // Listens for backspace and removes characters if it is active
+            if (this.backspace)
+            {
+                Section mySection = Outliner.getAllSections().get(sectionId);
+                String myOldText = mySection.getText();
+                String leftText = myOldText.substring(0, this.typeIndex);
+                String rightText = myOldText.substring(this.typeIndex);
+                String myNewText = leftText.substring(0, leftText.length()-1)+rightText;
+                mySection.editText(myNewText);
+                this.typeIndex -= 1;
+                reDrawScreen();
+            }
         }
     }
 
@@ -196,23 +234,78 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     
     public void keyHandler(KeyEvent e, int keyDetector)
     {
-        System.out.println(e.getKeyCode());
         int sectionId = Outliner.getSelected();
         if (sectionId != -1)
         {
+            // Check to remove the typing character before modifying string
+            if (this.typeChar)
+            {
+                Section mySection = Outliner.getAllSections().get(sectionId);
+                String myOldText = mySection.getText();
+                String leftText = myOldText.substring(0, this.typeIndex+1);
+                String rightText = myOldText.substring(this.typeIndex+1);
+                String myNewText = leftText.substring(0, leftText.length()-1)+rightText;
+                mySection.editText(myNewText);
+                this.typeChar = false;
+            }
             if (keyDetector == 1)
             {
+                // For all characters which can be appended to the text
                 if (e.getKeyCode() > 40 && e.getKeyCode() < 144 || e.getKeyCode() == 32)
                 {
                     Section mySection = Outliner.getAllSections().get(sectionId);
                     String myOldText = mySection.getText();
-                    String myNewText = myOldText + e.getKeyChar();
+                    String leftText = myOldText.substring(0, this.typeIndex);
+                    String rightText = myOldText.substring(this.typeIndex);
+                    String myNewText = leftText+e.getKeyChar()+rightText;
                     mySection.editText(myNewText);
-                    reDrawScreen();
+                    this.typeIndex += 1;
                 }
+                // For backspace
                 if (e.getKeyCode() ==  KeyEvent.VK_BACK_SPACE)
                 {
                     this.backspace = true;
+                }
+                // For arrow up and arrow down
+                if (e.getKeyCode() == 38 || e.getKeyCode() == 40)
+                {
+                    if (e.getKeyCode() == 38)
+                    {
+                        if (Outliner.getSelected()-1 != -1)
+                        {
+                            // Set the new selected and reset selected for each section
+                            Outliner.setSelected(Outliner.getSelected()-1);
+                            this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
+                            this.myOutline.resetSelected();
+                        }
+                    }
+                    else
+                    {
+                        if (Outliner.getSelected()+1 != Outliner.getSectionCount())
+                        {
+                            // Set the new selected and reset selected for each section
+                            Outliner.setSelected(Outliner.getSelected()+1);
+                            this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
+                            this.myOutline.resetSelected();
+                        }
+                    }
+                }
+                if (e.getKeyCode() == 37 || e.getKeyCode() == 39)
+                {
+                    if (e.getKeyCode() == 37)
+                    {
+                        if (this.typeIndex - 1 != -1)
+                        {
+                            this.typeIndex = this.typeIndex - 1;
+                        }
+                    }
+                    else
+                    {
+                        if (this.typeIndex + 1 != Outliner.getAllSections().get(Outliner.getSelected()).getText().length()+1)
+                        {
+                            this.typeIndex = this.typeIndex + 1;
+                        }
+                    }
                 }
             }
             else if (keyDetector == 2)
@@ -222,6 +315,37 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                     this.backspace = false;
                 }
             }
+        }
+        reDrawScreen();
+    }
+    
+    
+    public void keyTyper()
+    {
+        int sectionId = Outliner.getSelected();
+        if (sectionId != -1)
+        {
+            if (this.typeChar)
+            {
+                Section mySection = Outliner.getAllSections().get(sectionId);
+                String myOldText = mySection.getText();
+                String leftText = myOldText.substring(0, this.typeIndex+1);
+                String rightText = myOldText.substring(this.typeIndex+1);
+                String myNewText = leftText.substring(0, leftText.length()-1)+rightText;
+                mySection.editText(myNewText);
+                this.typeChar = false;
+            }
+            else
+            {
+                Section mySection = Outliner.getAllSections().get(sectionId);
+                String myOldText = mySection.getText();
+                String leftText = myOldText.substring(0, this.typeIndex);
+                String rightText = myOldText.substring(this.typeIndex);
+                String myNewText = leftText+"|"+rightText;
+                mySection.editText(myNewText);
+                this.typeChar = true;
+            }
+            reDrawScreen();
         }
     }
     
