@@ -50,7 +50,6 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     // to keep track of the index at which typing character is
     private int typeIndex;
     
-    
     public static void main(String[] args, Outliner Outline)
     {
         // Initiates the GUI object with the Outline provided
@@ -340,7 +339,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                        Outliner.setSectionCount(-1);
                        Outliner.deleteAtId(givenSection.getId());
                        givenSection.getParent().deleteSubSection(givenSection.getParent().getLocalId(givenSection));
-                       Outliner.setSelected(-1);
+                       Outliner.setSelected(givenSection.getParent().getId());
                        this.myOutline.resetSelected();
                     }
                     else
@@ -351,6 +350,8 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                        Outliner.setSelected(-1);
                        this.myOutline.resetSelected();
                     }
+                    this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
+                    this.typeChar = false;
                 }
             }
             else if (keyDetector == 2)
