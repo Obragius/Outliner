@@ -116,6 +116,27 @@ public class Outliner {
        }
     }
     
+    public static void reassignId(int index, Section givenSection)
+    {
+        ArrayList newList = new ArrayList();
+        for (int i = 0; i <= index; i++)
+        {
+            newList.add(Outliner.allSections.get(i));
+        }
+        
+        newList.add(givenSection);
+        for (int i = index+1; i < Outliner.sectionCount-1; i++)
+        {
+            Outliner.allSections.get(i).setId(Outliner.allSections.get(i).getId()+1);
+            newList.add(Outliner.allSections.get(i));
+        }
+        Outliner.allSections = newList;
+        for (int i = 0; i < Outliner.sectionCount;i++)
+        {
+            System.out.println(Outliner.allSections.get(i).getText());
+        }
+    }
+    
     public static void addSection(Section section)
     {
         Outliner.allSections.add(section);

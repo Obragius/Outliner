@@ -145,4 +145,18 @@ public class Section {
         this.id = id;
     }
     
+    public void setLeadingSection (int id)
+    {
+        ArrayList newList = new ArrayList();
+        newList.add(this.content.get(id));
+        for (int i = 0; i < this.content.size();i++)
+        {
+            if (i != id)
+            {
+                newList.add(this.content.get(i));
+            }
+        }
+        this.content = newList;
+    }
+    
 }
