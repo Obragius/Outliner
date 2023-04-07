@@ -226,6 +226,16 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     @Override
     public void keyPressed(KeyEvent e) {
         keyHandler(e,1);
+        // Handle create top level section at the outline
+        if (e.getKeyCode() == 10 && Outliner.getSelected() == -1)
+        {
+            System.out.println(Outliner.getSelected());
+            this.myOutline.createSection("This is a new section", null, null, Outliner.getSectionCount());
+            Section newSection = this.myOutline.getSections().get(this.myOutline.getSections().size()-1);
+            this.myOutline.setLeadingSection(this.myOutline.getSections().size()-1);
+            newSection.setId(Outliner.getSelected()+1);
+            Outliner.reassignId(Outliner.getSelected(), newSection);
+        }
     }
 
     @Override
@@ -235,6 +245,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     
     public void keyHandler(KeyEvent e, int keyDetector)
     {
+        System.out.println(e.getKeyCode());
         int sectionId = Outliner.getSelected();
         if (sectionId != -1)
         {
@@ -313,6 +324,33 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                     newSection.setId(Outliner.getSelected()+1);
                     Outliner.reassignId(Outliner.getSelected(), newSection);
                     
+                }
+                // If the user presses ESCAPE character, it unselects the section
+                if (e.getKeyCode() == 27)
+                {
+                    Outliner.setSelected(-1);
+                    this.myOutline.resetSelected();
+                }
+                // If the user has pressed DELETE character, delete currently selected Section
+                if (e.getKeyCode() == 127)
+                {
+                    Section givenSection = Outliner.getAllSections().get(Outliner.getSelected());
+                    if (Outliner.getAllSections().get(Outliner.getSelected()).getParent() != null)
+                    {
+                       Outliner.setSectionCount(-1);
+                       Outliner.deleteAtId(givenSection.getId());
+                       givenSection.getParent().deleteSubSection(givenSection.getParent().getLocalId(givenSection));
+                       Outliner.setSelected(-1);
+                       this.myOutline.resetSelected();
+                    }
+                    else
+                    {
+                       Outliner.setSectionCount(-1);
+                       Outliner.deleteAtId(givenSection.getId());
+                       this.myOutline.deleteSection(givenSection.getId());
+                       Outliner.setSelected(-1);
+                       this.myOutline.resetSelected();
+                    }
                 }
             }
             else if (keyDetector == 2)

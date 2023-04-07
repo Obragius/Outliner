@@ -57,9 +57,9 @@ public class Outliner {
     {
         // Create a section using the provided parameters
         // and give it a unqiue runtime id
-        Section newSection = new Section(text, user, tag, priority, new ArrayList(), this.getSectionCount(), 0);
+        Section newSection = new Section(text, user, tag, priority, new ArrayList(), this.getSectionCount(), 0,null);
         this.sections.add(newSection);
-        Outliner.setSectionCount();
+        Outliner.setSectionCount(1);
         Outliner.addSection(newSection);
     }
     
@@ -103,6 +103,7 @@ public class Outliner {
     // Changes the selected state boolean within the sections object
     public void resetSelected()
     {
+       System.out.println(Outliner.sectionCount);
        for (int i = 0; i < Outliner.sectionCount; i++)
        {
            if (i != Outliner.sectionSelected)
@@ -131,10 +132,26 @@ public class Outliner {
             newList.add(Outliner.allSections.get(i));
         }
         Outliner.allSections = newList;
-        for (int i = 0; i < Outliner.sectionCount;i++)
+    }
+    
+    public static void deleteAtId(int index)
+    {
+        ArrayList<Section> newList = new ArrayList();
+        for (int i = 0; i < index; i++)
         {
-            System.out.println(Outliner.allSections.get(i).getText());
+            newList.add(Outliner.allSections.get(i));
         }
+        for (int i = index+1; i <= Outliner.sectionCount; i++)
+        {
+            Outliner.allSections.get(i).setId(Outliner.allSections.get(i).getId()-1);
+            newList.add(Outliner.allSections.get(i));
+        }
+        for (int i = 0; i < Outliner.sectionCount; i++)
+        {
+            System.out.println(newList.get(i).getText());
+        }
+        Outliner.allSections = newList;
+        
     }
     
     public static void addSection(Section section)
@@ -169,11 +186,25 @@ public class Outliner {
     
     // Gives each section a unqiue ID, should not go down, as
     // it may lead to two sections having the same id
-    public static int setSectionCount()
+    public static int setSectionCount(int value)
     {
         int oldSectionCount = Outliner.sectionCount;
-        Outliner.sectionCount += 1;
+        Outliner.sectionCount += value;
         return oldSectionCount;
+    }
+    
+    public void setLeadingSection (int id)
+    {
+        ArrayList newList = new ArrayList();
+        newList.add(this.sections.get(id));
+        for (int i = 0; i < this.sections.size();i++)
+        {
+            if (i != id)
+            {
+                newList.add(this.sections.get(i));
+            }
+        }
+        this.sections = newList;
     }
     
     

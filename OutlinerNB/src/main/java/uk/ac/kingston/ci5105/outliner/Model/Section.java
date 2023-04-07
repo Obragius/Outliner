@@ -26,10 +26,14 @@ public class Section {
     private int id;
     // This will display that the sections is complete in the gui
     private boolean complete;
+    // This will tell at which indent level the section is 
     private int level;
+    // This will tell if the section is selected
     private boolean selected;
+    // This will store the pointer to the parent object
+    private Section parent;
 
-    public Section(String text, User[] user, String[] tag, int priority, ArrayList<Section> content, int id, int level)
+    public Section(String text, User[] user, String[] tag, int priority, ArrayList<Section> content, int id, int level, Section parent)
     {
         this.text = text;
         this.user = user;
@@ -39,13 +43,14 @@ public class Section {
         this.id = id;
         this.level = level;
         this.selected = false;
+        this.parent = parent;
     }
     
     public void createSubSection(String text, User[] user, String[] tag, int priority)
     {
-       Section newSection = new Section(text, user, tag, priority, new ArrayList(), Outliner.getSectionCount(),this.level+1);
+       Section newSection = new Section(text, user, tag, priority, new ArrayList(), Outliner.getSectionCount(),this.level+1,this);
        this.content.add(newSection);
-       Outliner.setSectionCount();
+       Outliner.setSectionCount(1);
        Outliner.addSection(newSection);
     }
     
@@ -82,6 +87,11 @@ public class Section {
     public void deleteSubSection(int sectionID)
     {
         this.content.remove(sectionID);
+    }
+    
+    public Section getParent()
+    {
+        return parent;
     }
     
 
@@ -138,6 +148,11 @@ public class Section {
     public int getId() 
     {
         return id;
+    }
+    
+    public int getLocalId(Section givenSection)
+    {
+        return this.content.indexOf(givenSection);
     }
 
     public void setId(int id) 
