@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package uk.ac.kingston.ci5105.outliner.Controller;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import uk.ac.kingston.ci5105.outliner.Model.*;
 import uk.ac.kingston.ci5105.outliner.View.*;
 import java.util.ArrayList;
@@ -30,12 +32,12 @@ public class Outliner {
     private static int sectionSelected = -1;
     
     
-    public static void main(String[] args)
+    public static void main(String[] args) throws JsonProcessingException
     {
         Outliner.onStartUp();
     }
     
-    public static void onStartUp()
+    public static void onStartUp() throws JsonProcessingException
     {
         // Create main parent section and make it empty
         Outliner Outline = new Outliner();
@@ -47,6 +49,8 @@ public class Outliner {
         firstSection.createSubSection("Cute dogs are great", null, null, Outliner.sectionCount);
         Outline.createSection("I love cats",null,null,Outliner.sectionCount);
         Outline.setName("My outline");
+        
+        Outliner.createJSON(Outline);
         
         
         // Run the view
@@ -85,6 +89,19 @@ public class Outliner {
         }
         myNewSections.remove(this.sections.get(sectionID));
         this.setSections(myNewSections);
+    }
+    
+    // This will be used to create a json version of this object
+    public static void createJSON(Outliner outline) throws JsonProcessingException
+    {
+        ObjectMapper myMapper = new ObjectMapper();
+        String myJson = myMapper.writeValueAsString(outline);
+        System.out.println(myJson);
+    }
+    
+    public int getLocalId(Section givenSection)
+    {
+        return this.sections.indexOf(givenSection);
     }
 
     public String getName() 

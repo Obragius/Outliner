@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package uk.ac.kingston.ci5105.outliner.Model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import uk.ac.kingston.ci5105.outliner.Controller.Outliner;
 
@@ -31,6 +32,7 @@ public class Section {
     // This will tell if the section is selected
     private boolean selected;
     // This will store the pointer to the parent object
+    @JsonIgnore
     private Section parent;
 
     public Section(String text, User[] user, String[] tag, int priority, ArrayList<Section> content, int id, int level, Section parent)

@@ -15,45 +15,47 @@ import uk.ac.kingston.ci5105.outliner.Model.*;
  */
 public class UnitTest extends TestCase{
     
-    public static void createTopLevelSection() // Some code to create the section of the outliner
+    public static Outliner createTopLevelSection() // Some code to create the section of the outliner
     {
-        Outliner.createSection("", null, null, 0);
+        Outliner myOutline = new Outliner();
+        myOutline.createSection("", null, null, 0);
+        return myOutline;
     }
     
     public void testCreateSection() // Testing the creation of the initial section present in the outliner [R3]
     {
-        createTopLevelSection();
-        Assert.assertTrue(Outliner.getSections().get(0) instanceof Section);
+        Outliner myOutline = createTopLevelSection();
+        Assert.assertTrue(myOutline.getSections().get(0) instanceof Section);
     }
     
     public void testCreateSubSection() // Testing the creation of sections within a sections [R4]
     {
-        createTopLevelSection();
-        Section testSection = Outliner.getSections().get(0);
+        Outliner myOutline = createTopLevelSection();
+        Section testSection = myOutline.getSections().get(0);
         testSection.createSubSection("",null,null,0);
         Assert.assertTrue(testSection.getContent().get(0) instanceof Section);
     }
     
     public void testEditSection() // Testing changing the text in the outliner section [R8]
     {
-        createTopLevelSection();
-        Section testSection = Outliner.getSections().get(0);
+        Outliner myOutline = createTopLevelSection();
+        Section testSection = myOutline.getSections().get(0);
         testSection.editText("TEST PACKAGE MESSAGE");
         Assert.assertEquals("TEST PACKAGE MESSAGE", testSection.getText());
     }
     
     public void testDeleteSection() // Testing that sections can be deleted [R9]
     {
-        createTopLevelSection();
-        Section testSection = Outliner.getSections().get(0);
-        Outliner.deleteSection(testSection.getId());
-        Assert.assertFalse(Outliner.getSections().contains(testSection));
+        Outliner myOutline = createTopLevelSection();
+        Section testSection = myOutline.getSections().get(0);
+        myOutline.deleteSection(myOutline.getLocalId(testSection));
+        Assert.assertFalse(myOutline.getSections().contains(testSection));
     }
     
     public void testMarkSectionComplete() // Testing that user can mark a section to be complete [R10]
     {
-        createTopLevelSection();
-        Section testSection = Outliner.getSections().get(0);
+        Outliner myOutline = createTopLevelSection();
+        Section testSection = myOutline.getSections().get(0);
         testSection.markComplete(true);
         Assert.assertTrue(testSection.isComplete());
         
@@ -63,8 +65,8 @@ public class UnitTest extends TestCase{
     
     public void testEditSubsection() // Testing that the user can change the text within a subsection [R11]
     {
-        createTopLevelSection();
-        Section testSection = Outliner.getSections().get(0);
+        Outliner myOutline = createTopLevelSection();
+        Section testSection = myOutline.getSections().get(0);
         testSection.createSubSection("",null,null,0);
         Section testSubSection = testSection.getContent().get(0);
         testSubSection.editText("TEST PACKAGE MESSAGE");
@@ -73,11 +75,11 @@ public class UnitTest extends TestCase{
     
     public void testDeleteSubSection() // Testing that the user can delete a section within a section [R12]
     {
-        createTopLevelSection();
-        Section testSection = Outliner.getSections().get(0);
+        Outliner myOutline = createTopLevelSection();
+        Section testSection = myOutline.getSections().get(0);
         testSection.createSubSection("",null,null,0);
         Section testSubSection = testSection.getContent().get(0);
-        testSection.deleteSubSection(testSubSection.getId());
+        testSection.deleteSubSection(testSection.getLocalId(testSubSection));
         Assert.assertFalse(testSection.getContent().contains(testSubSection));
         
     }
