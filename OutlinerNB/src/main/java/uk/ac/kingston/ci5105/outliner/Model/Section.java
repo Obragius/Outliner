@@ -54,6 +54,28 @@ public class Section {
        Outliner.addSection(newSection);
     }
     
+    public void deleteSubSectionWithMove(int sectionID)
+    {
+         // Before deleting a section at the level, move all children nodes to the parent level
+        ArrayList<Section> myNewSections = new ArrayList();
+        for (int i = 0; i < sectionID; i++)
+        {
+            myNewSections.add(this.content.get(i));
+        }
+        for (int i = 0; i < this.content.get(sectionID).getContent().size();i++)
+        {
+            myNewSections.add(this.content.get(sectionID).getContent().get(i));
+            // make sure that their parent is set to null
+            this.content.get(sectionID).getContent().get(i).setParent(this);
+        }
+        for (int i = sectionID; i < this.content.size(); i++)
+        {
+            myNewSections.add(this.content.get(i));
+        }
+        myNewSections.remove(this.content.get(sectionID));
+        this.setContent(myNewSections);
+    }
+    
     public void editText(String textValue)
     {
         setText(textValue);

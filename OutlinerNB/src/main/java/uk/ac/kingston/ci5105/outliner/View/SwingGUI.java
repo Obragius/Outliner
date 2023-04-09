@@ -338,7 +338,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                     {
                        Outliner.setSectionCount(-1);
                        Outliner.deleteAtId(givenSection.getId());
-                       givenSection.getParent().deleteSubSection(givenSection.getParent().getLocalId(givenSection));
+                       givenSection.getParent().deleteSubSectionWithMove(givenSection.getParent().getLocalId(givenSection));
                        Outliner.setSelected(givenSection.getParent().getId());
                        this.myOutline.resetSelected();
                     }
