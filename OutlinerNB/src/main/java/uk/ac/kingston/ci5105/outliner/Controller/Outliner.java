@@ -68,6 +68,28 @@ public class Outliner {
     {
         this.sections.remove(sectionID);
     }
+    
+    public void deleteTopLevelSection(int sectionID)
+    {
+         // Before deleting a section at the top level, move all children nodes to the top level
+        ArrayList<Section> myNewSections = new ArrayList();
+        for (int i = 0; i < this.sections.get(sectionID).getContent().size();i++)
+        {
+            myNewSections.add(this.sections.get(sectionID).getContent().get(i));
+            // make sure that their parent is set to null
+            this.sections.get(sectionID).getContent().get(i).setParent(null);
+        }
+        for (int i = 0; i < this.sections.size(); i++)
+        {
+            myNewSections.add(this.sections.get(i));
+        }
+        for (int i = 0; i < myNewSections.size();i++)
+        {
+            System.out.println(myNewSections.get(i).getText());
+        }
+        myNewSections.remove(this.sections.get(sectionID));
+        this.setSections(myNewSections);
+    }
 
     public String getName() 
     {
@@ -145,10 +167,6 @@ public class Outliner {
         {
             Outliner.allSections.get(i).setId(Outliner.allSections.get(i).getId()-1);
             newList.add(Outliner.allSections.get(i));
-        }
-        for (int i = 0; i < Outliner.sectionCount; i++)
-        {
-            System.out.println(newList.get(i).getText());
         }
         Outliner.allSections = newList;
         

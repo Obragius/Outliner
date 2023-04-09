@@ -94,6 +94,21 @@ public class Section {
         return parent;
     }
     
+    public void setParent(Section section)
+    {
+        this.parent = section;
+    }
+    
+    public int getLevel()
+    {
+        return this.level;
+    }
+    
+    public void setLevel(int level)
+    {
+        this.level = level;
+    }
+    
 
     public String getText() 
     {

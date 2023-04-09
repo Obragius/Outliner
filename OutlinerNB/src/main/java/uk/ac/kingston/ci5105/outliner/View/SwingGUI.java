@@ -346,12 +346,19 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                     {
                        Outliner.setSectionCount(-1);
                        Outliner.deleteAtId(givenSection.getId());
-                       this.myOutline.deleteSection(givenSection.getId());
+                       this.myOutline.deleteTopLevelSection(givenSection.getId());
                        Outliner.setSelected(-1);
                        this.myOutline.resetSelected();
                     }
-                    this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
+                    if (Outliner.getSelected() != -1)
+                    {
+                        this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
+                    }
                     this.typeChar = false;
+                    for (int i = 0; i < Outliner.getAllSections().size();i++)
+                        {
+                            System.out.println(Outliner.getAllSections().get(i).getId());
+                        }
                 }
             }
             else if (keyDetector == 2)
