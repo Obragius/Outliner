@@ -355,10 +355,6 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                         this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
                     }
                     this.typeChar = false;
-                    for (int i = 0; i < Outliner.getAllSections().size();i++)
-                        {
-                            System.out.println(Outliner.getAllSections().get(i).getId());
-                        }
                 }
             }
             else if (keyDetector == 2)

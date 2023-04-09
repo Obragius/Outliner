@@ -83,10 +83,6 @@ public class Outliner {
         {
             myNewSections.add(this.sections.get(i));
         }
-        for (int i = 0; i < myNewSections.size();i++)
-        {
-            System.out.println(myNewSections.get(i).getText());
-        }
         myNewSections.remove(this.sections.get(sectionID));
         this.setSections(myNewSections);
     }
