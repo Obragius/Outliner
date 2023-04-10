@@ -30,6 +30,8 @@ public class Outliner {
     private static int sectionCount = 0;
     // Keeps track of the selected sections, so that it can be modified
     private static int sectionSelected = -1;
+    // This will store JSON objects to allow to come back to previous state of the program
+    private static ArrayList<String> allChanges = new ArrayList();
     
     
     public static void main(String[] args) throws JsonProcessingException
@@ -50,7 +52,7 @@ public class Outliner {
         Outline.createSection("I love cats",null,null,Outliner.sectionCount);
         Outline.setName("My outline");
         
-        Outliner.createJSON(Outline);
+        Outliner.toJSON(Outline);
         
         
         // Run the view
@@ -92,11 +94,11 @@ public class Outliner {
     }
     
     // This will be used to create a json version of this object
-    public static void createJSON(Outliner outline) throws JsonProcessingException
+    public static String toJSON(Outliner outline) throws JsonProcessingException
     {
         ObjectMapper myMapper = new ObjectMapper();
         String myJson = myMapper.writeValueAsString(outline);
-        System.out.println(myJson);
+        return myJson;
     }
     
     public int getLocalId(Section givenSection)

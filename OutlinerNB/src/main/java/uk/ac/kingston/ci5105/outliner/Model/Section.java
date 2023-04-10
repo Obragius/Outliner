@@ -83,6 +83,15 @@ public class Section {
         setText(textValue);
     }
     
+    public void addChar(char givenChar, int typeIndex)
+    {
+        String myOldText = this.getText();
+        String leftText = myOldText.substring(0, typeIndex);
+        String rightText = myOldText.substring(typeIndex);
+        String myNewText = leftText+givenChar+rightText;
+        this.editText(myNewText);
+    }
+    
     public void markComplete(boolean value)
     {
         this.complete = value;

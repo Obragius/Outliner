@@ -259,11 +259,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 if (e.getKeyCode() > 40 && e.getKeyCode() < 144 || e.getKeyCode() == 32)
                 {
                     Section mySection = Outliner.getAllSections().get(sectionId);
-                    String myOldText = mySection.getText();
-                    String leftText = myOldText.substring(0, this.typeIndex);
-                    String rightText = myOldText.substring(this.typeIndex);
-                    String myNewText = leftText+e.getKeyChar()+rightText;
-                    mySection.editText(myNewText);
+                    mySection.addChar(e.getKeyChar(),this.typeIndex);
                     this.typeIndex += 1;
                 }
                 // For backspace
