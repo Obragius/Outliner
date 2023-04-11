@@ -32,6 +32,8 @@ public class Outliner {
     private static int sectionSelected = -1;
     // This will store JSON objects to allow to come back to previous state of the program
     private static ArrayList<String> allChanges = new ArrayList();
+    // This will help reassign all id's
+    private static int idCount;
     
     
     public static void main(String[] args) throws JsonProcessingException
@@ -45,10 +47,10 @@ public class Outliner {
         Outliner Outline = new Outliner();
         Outline.createSection("I love dogs",null,null,Outliner.sectionCount);
         Section firstSection = Outline.getSections().get(0);
-        firstSection.createSubSection("I love cute dogs", null, null, Outliner.sectionCount);
+        firstSection.createSubSection("I love cute dogs", null, null, Outliner.sectionCount,Outline);
         Section secondSection = firstSection.getContent().get(0);
-        secondSection.createSubSection("Cute dogs are the best", null, null, Outliner.sectionCount);
-        firstSection.createSubSection("Cute dogs are great", null, null, Outliner.sectionCount);
+        secondSection.createSubSection("Cute dogs are the best", null, null, Outliner.sectionCount,Outline);
+        firstSection.createSubSection("Cute dogs are great", null, null, Outliner.sectionCount,Outline);
         Outline.createSection("I love cats",null,null,Outliner.sectionCount);
         Outline.setName("My outline");
         
@@ -66,10 +68,10 @@ public class Outliner {
         Section newSection = new Section(text, user, tag, priority, new ArrayList(), this.getSectionCount(), 0,null);
         this.sections.add(newSection);
         Outliner.setSectionCount(1);
-        Outliner.addSection(newSection);
+        Outliner.reassignId(this);
     }
     
-    public Section createSectionAtId(String text,User[] user, String[] tag, int priority)
+    public Section createSectionAtId(String text,User[] user, String[] tag, int priority, Outliner myOutline)
     {
         // Create a section using the provided parameters
         // and give it a unqiue runtime id
@@ -80,7 +82,7 @@ public class Outliner {
         newSection.setId(this.sections.get(thisSectionId+1).getId());
         this.setMiddleSection(newSection, thisSectionId+1);
         Outliner.setSectionCount(1);
-        Outliner.reassignId(nextSectionId-1,newSection);
+        Outliner.reassignId(myOutline);
         return newSection;
     }
     
@@ -114,6 +116,21 @@ public class Outliner {
         ObjectMapper myMapper = new ObjectMapper();
         String myJson = myMapper.writeValueAsString(outline);
         return myJson;
+    }
+    
+    public Section moveSectionToTop(Section section, Outliner myOutline)
+    {
+        int nextItemId = this.getSections().get(this.getLocalId(section.getParent())+1).getId();
+        this.setMiddleSectionWithoutCreate(section, this.getLocalId(section.getParent())+1);
+        section.getParent().deleteSubSection(section.getParent().getLocalId(section));
+        int oldId = section.getId();
+        if (nextItemId -1 != oldId)
+        {
+            section.setId(nextItemId);
+            Outliner.reassignId(myOutline);
+        }    
+        section.setParent(null);
+        return section;
     }
     
     public int getLocalId(Section givenSection)
@@ -155,7 +172,6 @@ public class Outliner {
     // Changes the selected state boolean within the sections object
     public void resetSelected()
     {
-       System.out.println(Outliner.sectionCount);
        for (int i = 0; i < Outliner.sectionCount; i++)
        {
            if (i != Outliner.sectionSelected)
@@ -169,21 +185,41 @@ public class Outliner {
        }
     }
     
-    public static void reassignId(int index, Section givenSection)
+    // new reasign id method 
+    public static void reassignId(Outliner myOutline)
     {
-        ArrayList newList = new ArrayList();
-        for (int i = 0; i <= index; i++)
+        Outliner.idCount = 0;
+        ArrayList<Section> newList = new ArrayList();
+        for (int i = 0; i < myOutline.sections.size(); i++)
         {
-            newList.add(Outliner.allSections.get(i));
-        }
-        
-        newList.add(givenSection);
-        for (int i = index+1; i < Outliner.sectionCount-1; i++)
-        {
-            Outliner.allSections.get(i).setId(Outliner.allSections.get(i).getId()+1);
-            newList.add(Outliner.allSections.get(i));
+            if (myOutline.sections.size() != 0)
+            {
+                newList.addAll(Outliner.gatherSections(myOutline.sections.get(i)));
+            }
         }
         Outliner.allSections = newList;
+    }
+    
+    public static ArrayList<Section> gatherSections(Section givenSection)
+    {
+        ArrayList<Section> newList = new ArrayList();
+        if (givenSection.getContent().size() == 0)
+        {
+            newList.add(givenSection);
+            givenSection.setId(Outliner.idCount);
+            Outliner.idCount += 1;
+        }
+        else
+        {
+            newList.add(givenSection);
+            givenSection.setId(Outliner.idCount);
+            Outliner.idCount += 1;
+            for (int i = 0; i < givenSection.getContent().size();i++)
+            {
+                newList.addAll(Outliner.gatherSections(givenSection.getContent().get(i)));
+            }   
+        }
+        return newList;
     }
     
     public static void reassignIdWithoutCreate(int index, Section givenSection, int oldIndex)
@@ -294,5 +330,22 @@ public class Outliner {
         this.sections = newList;
     }
     
+    public void setMiddleSectionWithoutCreate(Section givenSection, int newID)
+    {
+        ArrayList newList = new ArrayList();
+        for (int i = 0; i <= newID-1;i++)
+        {
+            //System.out.println(this.content.get(i).getText());
+            newList.add(this.sections.get(i));
+        }
+        newList.add(givenSection);
+        //System.out.println(newID);
+        for (int i = newID; i < this.sections.size();i++)
+        {
+            //System.out.println(this.content.get(i).getText());
+            newList.add(this.sections.get(i));
+        }
+        this.sections = newList;
+    }
     
 }

@@ -322,7 +322,15 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                         if (e.getKeyCode() == 37)
                         {
                             Section mySection = Outliner.getAllSections().get(sectionId);
-                            Section addedSection = mySection.moveSectionToParent(mySection.getParent());
+                            Section addedSection;
+                            if (mySection.getParent().getParent() == null)
+                            {
+                                addedSection = this.myOutline.moveSectionToTop(mySection,this.myOutline);
+                            }
+                            else
+                            {
+                                addedSection = mySection.moveSectionToParent(mySection.getParent(),this.myOutline);
+                            }
                             Outliner.setSelected(addedSection.getId());
                             this.myOutline.resetSelected();
                             this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
@@ -331,7 +339,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                         else
                         {
                             Section mySection = Outliner.getAllSections().get(sectionId);
-                            Section addedSection = mySection.createContainerToMoveTo();
+                            Section addedSection = mySection.createContainerToMoveTo(this.myOutline);
                             Outliner.setSelected(addedSection.getId());
                             this.myOutline.resetSelected();
                             this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
@@ -364,11 +372,11 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                     Section addedSection;
                     if (currentSection.getParent() != null)
                     {
-                        addedSection = currentSection.createParentSection();
+                        addedSection = currentSection.createParentSection(this.myOutline);
                     }
                     else
                     {
-                        addedSection = this.myOutline.createSectionAtId("This is a new section", null, null, Outliner.getSectionCount());
+                        addedSection = this.myOutline.createSectionAtId("This is a new section", null, null, Outliner.getSectionCount(),this.myOutline);
                     }
                     Outliner.setSelected(addedSection.getId());
                     this.myOutline.resetSelected();
