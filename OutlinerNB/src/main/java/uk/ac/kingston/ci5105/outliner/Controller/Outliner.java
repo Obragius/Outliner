@@ -120,16 +120,36 @@ public class Outliner {
     
     public Section moveSectionToTop(Section section, Outliner myOutline)
     {
-        int nextItemId = this.getSections().get(this.getLocalId(section.getParent())+1).getId();
         this.setMiddleSectionWithoutCreate(section, this.getLocalId(section.getParent())+1);
         section.getParent().deleteSubSection(section.getParent().getLocalId(section));
-        int oldId = section.getId();
-        if (nextItemId -1 != oldId)
-        {
-            section.setId(nextItemId);
-            Outliner.reassignId(myOutline);
-        }    
+        Outliner.reassignId(myOutline);  
         section.setParent(null);
+        return section;
+    }
+    
+    public Section moveSectionToBottom(Section section, Outliner myOutline)
+    {
+        if (this.getLocalId(section)-1 != -1)
+        {
+            Section newParent = this.getSections().get(this.getLocalId(section)-1);
+            newParent.setMiddleSectionWithoutCreate(section, newParent.getContent().size());
+            this.deleteSection(this.getLocalId(section));
+            section.setParent(newParent);
+        }
+        else
+        {
+            this.createSection("", null, null, Outliner.getSectionCount());
+            Section newSection = this.getSections().get(this.getSections().size()-1);
+            int thisSectionID = this.getLocalId(section);
+            this.setMiddleSection(newSection,thisSectionID+1);
+            Outliner.reassignId(myOutline);
+            newSection.setHidden(true);
+            ArrayList<Section> newList = new ArrayList();
+            newList.add(section);
+            newSection.setContent(newList);
+            this.deleteSection(this.getLocalId(section));
+            section.setParent(newSection);
+        }
         return section;
     }
     

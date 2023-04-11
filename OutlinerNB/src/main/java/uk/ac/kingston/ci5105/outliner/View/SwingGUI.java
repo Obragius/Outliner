@@ -242,7 +242,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
             Section newSection = this.myOutline.getSections().get(this.myOutline.getSections().size()-1);
             this.myOutline.setLeadingSection(this.myOutline.getSections().size()-1);
             newSection.setId(Outliner.getSelected()+1);
-            Outliner.reassignId(Outliner.getSelected(), newSection);
+            Outliner.reassignId(this.myOutline);
         }
     }
 
@@ -339,7 +339,15 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                         else
                         {
                             Section mySection = Outliner.getAllSections().get(sectionId);
-                            Section addedSection = mySection.createContainerToMoveTo(this.myOutline);
+                            Section addedSection;
+                            if (mySection.getParent() == null)
+                            {
+                                addedSection = this.myOutline.moveSectionToBottom(mySection,this.myOutline);
+                            }
+                            else
+                            {
+                                addedSection = mySection.createContainerToMoveTo(this.myOutline);
+                            }
                             Outliner.setSelected(addedSection.getId());
                             this.myOutline.resetSelected();
                             this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
