@@ -311,14 +311,19 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 // If the key code is 10, we create a new section and place it in the same level as the selected
                 if (e.getKeyCode() == 10)
                 {
-                    System.out.println(Outliner.getSelected());
+                    // check if the section is at the top level
                     Section currentSection = Outliner.getAllSections().get(Outliner.getSelected());
-                    currentSection.createSubSection("This is a new section", null, null, Outliner.getSectionCount());
-                    Section newSection = currentSection.getContent().get(currentSection.getContent().size()-1);
-                    currentSection.setLeadingSection(currentSection.getContent().size()-1);
-                    newSection.setId(Outliner.getSelected()+1);
-                    Outliner.reassignId(Outliner.getSelected(), newSection);
-                    
+                    Section addedSection;
+                    if (currentSection.getParent() != null)
+                    {
+                        addedSection = currentSection.createParentSection();
+                    }
+                    else
+                    {
+                        addedSection = this.myOutline.createSectionAtId("This is a new section", null, null, Outliner.getSectionCount());
+                    }
+                    Outliner.setSelected(addedSection.getId());
+                    this.myOutline.resetSelected();
                 }
                 // If the user presses ESCAPE character, it unselects the section
                 if (e.getKeyCode() == 27)

@@ -69,6 +69,18 @@ public class Outliner {
         Outliner.addSection(newSection);
     }
     
+    public Section createSectionAtId(String text,User[] user, String[] tag, int priority)
+    {
+        // Create a section using the provided parameters
+        // and give it a unqiue runtime id
+        Section newSection = new Section(text, user, tag, priority, new ArrayList(), this.getSectionCount(), 0,null);
+        this.sections.add(newSection);
+        this.setMiddleSection(newSection, Outliner.getSelected()+1);
+        Outliner.setSectionCount(1);
+        Outliner.addSection(newSection);
+        return newSection;
+    }
+    
     // Delete a top level section from the Outline object
     public void deleteSection(int sectionID)
     {
@@ -240,7 +252,20 @@ public class Outliner {
         this.sections = newList;
     }
     
-    
+    public void setMiddleSection (Section givenSection, int newID)
+    {
+        ArrayList newList = new ArrayList();
+        for (int i = 0; i <= newID-1;i++)
+        {
+            newList.add(this.sections.get(i));
+        }
+        newList.add(givenSection);
+        for (int i = newID; i < this.sections.size()-1;i++)
+        {
+            newList.add(this.sections.get(i));
+        }
+        this.sections = newList;
+    }
     
     
 }

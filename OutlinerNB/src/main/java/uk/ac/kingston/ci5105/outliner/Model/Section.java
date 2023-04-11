@@ -56,6 +56,17 @@ public class Section {
        Outliner.addSection(newSection);
     }
     
+    public Section createParentSection()
+    {
+        this.parent.createSubSection("This is a new section", null, null, Outliner.getSectionCount());
+        Section newSection = this.parent.getContent().get(this.parent.getContent().size()-1);
+        int thisSectionID = this.parent.getLocalId(this);
+        newSection.setId(this.getId()+1);
+        this.parent.setMiddleSection(newSection,thisSectionID+1);
+        Outliner.reassignId(this.getId(), newSection);
+        return newSection;
+    }
+    
     public void deleteSubSectionWithMove(int sectionID)
     {
          // Before deleting a section at the level, move all children nodes to the parent level
@@ -218,6 +229,24 @@ public class Section {
             {
                 newList.add(this.content.get(i));
             }
+        }
+        this.content = newList;
+    }
+    
+    public void setMiddleSection (Section givenSection, int newID)
+    {
+        ArrayList newList = new ArrayList();
+        for (int i = 0; i <= newID-1;i++)
+        {
+            //System.out.println(this.content.get(i).getText());
+            newList.add(this.content.get(i));
+        }
+        newList.add(givenSection);
+        //System.out.println(newID);
+        for (int i = newID; i < this.content.size()-1;i++)
+        {
+            //System.out.println(this.content.get(i).getText());
+            newList.add(this.content.get(i));
         }
         this.content = newList;
     }
