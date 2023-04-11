@@ -324,6 +324,8 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                     }
                     Outliner.setSelected(addedSection.getId());
                     this.myOutline.resetSelected();
+                    this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
+                    this.typeChar = false;
                 }
                 // If the user presses ESCAPE character, it unselects the section
                 if (e.getKeyCode() == 27)

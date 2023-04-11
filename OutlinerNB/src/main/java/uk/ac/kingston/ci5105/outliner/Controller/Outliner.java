@@ -75,9 +75,12 @@ public class Outliner {
         // and give it a unqiue runtime id
         Section newSection = new Section(text, user, tag, priority, new ArrayList(), this.getSectionCount(), 0,null);
         this.sections.add(newSection);
-        this.setMiddleSection(newSection, Outliner.getSelected()+1);
+        int thisSectionId = this.getLocalId(Outliner.getAllSections().get(Outliner.getSelected()));
+        int nextSectionId = this.sections.get(thisSectionId+1).getId();
+        newSection.setId(this.sections.get(thisSectionId+1).getId());
+        this.setMiddleSection(newSection, thisSectionId+1);
         Outliner.setSectionCount(1);
-        Outliner.addSection(newSection);
+        Outliner.reassignId(nextSectionId-1,newSection);
         return newSection;
     }
     
@@ -177,6 +180,7 @@ public class Outliner {
         newList.add(givenSection);
         for (int i = index+1; i < Outliner.sectionCount-1; i++)
         {
+            System.out.println(Outliner.allSections.get(i).getText());
             Outliner.allSections.get(i).setId(Outliner.allSections.get(i).getId()+1);
             newList.add(Outliner.allSections.get(i));
         }
