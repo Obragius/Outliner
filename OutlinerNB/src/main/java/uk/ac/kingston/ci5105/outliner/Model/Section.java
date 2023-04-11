@@ -31,6 +31,8 @@ public class Section {
     private int level;
     // This will tell if the section is selected
     private boolean selected;
+    // This will tell if the container needs to be hidden
+    private boolean hidden;
     // This will store the pointer to the parent object
     @JsonIgnore
     private Section parent;
@@ -46,6 +48,7 @@ public class Section {
         this.level = level;
         this.selected = false;
         this.parent = parent;
+        this.hidden = false;
     }
     
     public void createSubSection(String text, User[] user, String[] tag, int priority)
@@ -65,6 +68,61 @@ public class Section {
         this.parent.setMiddleSection(newSection,thisSectionID+1);
         Outliner.reassignId(this.getId(), newSection);
         return newSection;
+    }
+    
+    public Section createContainerToMoveTo()
+    {
+        if (this.parent.getLocalId(this)-1 != -1)
+        {
+            Section newParent = this.parent.getContent().get(this.parent.getLocalId(this)-1);
+            newParent.setMiddleSectionWithoutCreate(this, newParent.getContent().size());
+            this.parent.deleteSubSection(this.parent.getLocalId(this));
+            this.setParent(newParent);
+        }
+        else
+        {
+            this.parent.createSubSection("", null, null, Outliner.getSectionCount());
+            Section newSection = this.parent.getContent().get(this.parent.getContent().size()-1);
+            int thisSectionID = this.parent.getLocalId(this);
+            newSection.setId(this.getId());
+            this.parent.setMiddleSection(newSection,thisSectionID+1);
+            Outliner.reassignId(this.getId()-1, newSection);
+            newSection.setHidden(true);
+            ArrayList<Section> newList = new ArrayList();
+            newList.add(this);
+            newSection.setContent(newList);
+            this.parent.deleteSubSection(this.parent.getLocalId(this));
+            this.setParent(newSection);
+        }
+        return this;
+    }
+    
+    public Section moveSectionToParent(Section givenSection)
+    {
+        if (this.parent.isHidden())
+        {
+            Outliner.setSectionCount(-1);
+            Outliner.deleteAtId(givenSection.getId());
+            givenSection.getParent().deleteSubSectionWithMove(givenSection.getParent().getLocalId(givenSection));
+        }
+        else
+        {
+            int nextItemId = this.parent.getParent().getContent().get(this.parent.getParent().getLocalId(this.parent)+1).getId();
+            this.parent.getParent().setMiddleSectionWithoutCreate(this, this.parent.getParent().getLocalId(this.parent)+1);
+            this.parent.deleteSubSection(this.parent.getLocalId(this));
+            int oldId = this.getId();
+            if (nextItemId -1 != oldId)
+            {
+                this.setId(nextItemId);
+                Outliner.reassignIdWithoutCreate(nextItemId, this,oldId);
+            }    
+            this.setParent(this.parent.getParent());
+        }
+        for (int i = 0; i < Outliner.getSectionCount();i++)
+        {
+            System.out.println(Outliner.getAllSections().get(i).getText());
+        }
+        return this;
     }
     
     public void deleteSubSectionWithMove(int sectionID)
@@ -116,6 +174,16 @@ public class Section {
     public void markSelected()
     {
         this.selected = true;
+    }
+    
+    public void setHidden(boolean arg)
+    {
+        this.hidden = arg;
+    }
+    
+    public boolean isHidden()
+    {
+        return this.hidden;
     }
     
     public boolean isSelected()
@@ -244,6 +312,24 @@ public class Section {
         newList.add(givenSection);
         //System.out.println(newID);
         for (int i = newID; i < this.content.size()-1;i++)
+        {
+            //System.out.println(this.content.get(i).getText());
+            newList.add(this.content.get(i));
+        }
+        this.content = newList;
+    }
+    
+    public void setMiddleSectionWithoutCreate(Section givenSection, int newID)
+    {
+        ArrayList newList = new ArrayList();
+        for (int i = 0; i <= newID-1;i++)
+        {
+            //System.out.println(this.content.get(i).getText());
+            newList.add(this.content.get(i));
+        }
+        newList.add(givenSection);
+        //System.out.println(newID);
+        for (int i = newID; i < this.content.size();i++)
         {
             //System.out.println(this.content.get(i).getText());
             newList.add(this.content.get(i));

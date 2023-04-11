@@ -180,7 +180,30 @@ public class Outliner {
         newList.add(givenSection);
         for (int i = index+1; i < Outliner.sectionCount-1; i++)
         {
-            System.out.println(Outliner.allSections.get(i).getText());
+            Outliner.allSections.get(i).setId(Outliner.allSections.get(i).getId()+1);
+            newList.add(Outliner.allSections.get(i));
+        }
+        Outliner.allSections = newList;
+    }
+    
+    public static void reassignIdWithoutCreate(int index, Section givenSection, int oldIndex)
+    {
+        ArrayList newList = new ArrayList();
+        for (int i = 0; i < index; i++)
+        {
+            if (i != oldIndex)
+            {
+                if (i > oldIndex)
+                {
+                    Outliner.allSections.get(i).setId(Outliner.allSections.get(i).getId()-1);
+                }
+            newList.add(Outliner.allSections.get(i));
+            }
+        }
+        
+        newList.add(givenSection);
+        for (int i = index; i < Outliner.sectionCount; i++)
+        {
             Outliner.allSections.get(i).setId(Outliner.allSections.get(i).getId()+1);
             newList.add(Outliner.allSections.get(i));
         }

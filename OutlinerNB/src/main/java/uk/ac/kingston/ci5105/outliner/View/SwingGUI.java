@@ -5,6 +5,7 @@
 package uk.ac.kingston.ci5105.outliner.View;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -17,12 +18,14 @@ import uk.ac.kingston.ci5105.outliner.Controller.*;
 
 
 import java.util.List;
+import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.Timer;
 /**
  *
@@ -49,6 +52,8 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     private boolean typeChar;
     // to keep track of the index at which typing character is
     private int typeIndex;
+    // to keep track of ctrl press
+    private boolean ctrl;
     
     public static void main(String[] args, Outliner Outline)
     {
@@ -134,6 +139,10 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         if (givenSection.isSelected())
         {
             myLabel.setBackground(Color.red);
+        }
+        if (givenSection.isHidden())
+        {
+            myLabel.hide();
         }
         myLabel.setText(addedText+givenSection.getText());
         myLabel.addMouseListener(this);
@@ -255,6 +264,11 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
             }
             if (keyDetector == 1)
             {
+                // For ctrl key to allow to move the sections
+                if (e.getKeyCode() == 17)
+                {
+                    this.ctrl = true;
+                }
                 // For all characters which can be appended to the text
                 if (e.getKeyCode() > 40 && e.getKeyCode() < 144 || e.getKeyCode() == 32)
                 {
@@ -275,7 +289,12 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                         if (Outliner.getSelected()-1 != -1)
                         {
                             // Set the new selected and reset selected for each section
-                            Outliner.setSelected(Outliner.getSelected()-1);
+                            int checkHidden = 0;
+                            while(Outliner.getAllSections().get(Outliner.getSelected()-1+checkHidden).isHidden())
+                            {
+                                checkHidden-=1;
+                            }
+                            Outliner.setSelected(Outliner.getSelected()-1+checkHidden);
                             this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
                             this.myOutline.resetSelected();
                         }
@@ -285,7 +304,12 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                         if (Outliner.getSelected()+1 != Outliner.getSectionCount())
                         {
                             // Set the new selected and reset selected for each section
-                            Outliner.setSelected(Outliner.getSelected()+1);
+                            int checkHidden = 0;
+                            while(Outliner.getAllSections().get(Outliner.getSelected()+1+checkHidden).isHidden())
+                            {
+                                checkHidden+=1;
+                            }
+                            Outliner.setSelected(Outliner.getSelected()+1+checkHidden);
                             this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
                             this.myOutline.resetSelected();
                         }
@@ -293,18 +317,42 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 }
                 if (e.getKeyCode() == 37 || e.getKeyCode() == 39)
                 {
-                    if (e.getKeyCode() == 37)
+                    if (this.ctrl)
                     {
-                        if (this.typeIndex - 1 != -1)
+                        if (e.getKeyCode() == 37)
                         {
-                            this.typeIndex = this.typeIndex - 1;
+                            Section mySection = Outliner.getAllSections().get(sectionId);
+                            Section addedSection = mySection.moveSectionToParent(mySection.getParent());
+                            Outliner.setSelected(addedSection.getId());
+                            this.myOutline.resetSelected();
+                            this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
+                            this.typeChar = false;
+                        }
+                        else
+                        {
+                            Section mySection = Outliner.getAllSections().get(sectionId);
+                            Section addedSection = mySection.createContainerToMoveTo();
+                            Outliner.setSelected(addedSection.getId());
+                            this.myOutline.resetSelected();
+                            this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
+                            this.typeChar = false;
                         }
                     }
                     else
                     {
-                        if (this.typeIndex + 1 != Outliner.getAllSections().get(Outliner.getSelected()).getText().length()+1)
+                        if (e.getKeyCode() == 37)
                         {
-                            this.typeIndex = this.typeIndex + 1;
+                            if (this.typeIndex - 1 != -1)
+                            {
+                                this.typeIndex = this.typeIndex - 1;
+                            }
+                        }
+                        else
+                        {
+                            if (this.typeIndex + 1 != Outliner.getAllSections().get(Outliner.getSelected()).getText().length()+1)
+                            {
+                                this.typeIndex = this.typeIndex + 1;
+                            }
                         }
                     }
                 }
@@ -362,6 +410,11 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
             }
             else if (keyDetector == 2)
             {
+                // For ctrl key to allow to move the sections
+                if (e.getKeyCode() == 17)
+                {
+                    this.ctrl = false;
+                }
                 if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
                 {
                     this.backspace = false;
