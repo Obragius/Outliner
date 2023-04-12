@@ -51,6 +51,11 @@ public class Section {
         this.hidden = false;
     }
     
+    public Section()
+    {
+        
+    }
+    
     public void createSubSection(String text, User[] user, String[] tag, int priority, Outliner myOutline)
     {
        Section newSection = new Section(text, user, tag, priority, new ArrayList(), Outliner.getSectionCount(),this.level+1,this);

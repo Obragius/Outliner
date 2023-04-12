@@ -34,6 +34,8 @@ public class Outliner {
     private static ArrayList<String> allChanges = new ArrayList();
     // This will help reassign all id's
     private static int idCount;
+    //This will store the gui object which is reponsible for all displays
+    private static SwingGUI myGUI;
     
     
     public static void main(String[] args) throws JsonProcessingException
@@ -54,11 +56,11 @@ public class Outliner {
         Outline.createSection("I love cats",null,null,Outliner.sectionCount);
         Outline.setName("My outline");
         
-        Outliner.toJSON(Outline);
+        Outliner.saveToJSON(Outline);
         
         
         // Run the view
-        SwingGUI.main(null,Outline);
+        Outliner.myGUI = SwingGUI.main(null,Outline);
     }
     
     public void createSection(String text,User[] user, String[] tag, int priority)
@@ -110,12 +112,26 @@ public class Outliner {
         this.setSections(myNewSections);
     }
     
-    // This will be used to create a json version of this object
-    public static String toJSON(Outliner outline) throws JsonProcessingException
+    // This will be used to create a json version of this object and save them
+    public static void saveToJSON(Outliner outline) throws JsonProcessingException
     {
         ObjectMapper myMapper = new ObjectMapper();
         String myJson = myMapper.writeValueAsString(outline);
-        return myJson;
+        Outliner.allChanges.add(myJson);
+    }
+    
+    public static String getJson(int id)
+    {
+        return Outliner.allChanges.get(id);
+    }
+    
+    //This will be used to reaload json into the new object
+    public static void loadJsonToOutline(String givenJson) throws JsonProcessingException
+    {
+        ObjectMapper myMapper = new ObjectMapper();
+        Outliner myOutline = myMapper.readValue(givenJson,Outliner.class);
+        Outliner.reassignParents(myOutline);
+        Outliner.myGUI.setOutline(myOutline);
     }
     
     public Section moveSectionToTop(Section section, Outliner myOutline)
@@ -125,6 +141,12 @@ public class Outliner {
         Outliner.reassignId(myOutline);  
         section.setParent(null);
         return section;
+    }
+    
+    // This method will reasign parents to all sections
+    public static void reassignParents(Outliner myOutline)
+    {
+        
     }
     
     public Section moveSectionToBottom(Section section, Outliner myOutline)

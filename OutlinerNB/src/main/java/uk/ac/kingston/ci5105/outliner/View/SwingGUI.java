@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package uk.ac.kingston.ci5105.outliner.View;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.KeyboardFocusManager;
@@ -18,6 +19,8 @@ import uk.ac.kingston.ci5105.outliner.Controller.*;
 
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -55,10 +58,11 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     // to keep track of ctrl press
     private boolean ctrl;
     
-    public static void main(String[] args, Outliner Outline)
+    public static SwingGUI main(String[] args, Outliner Outline)
     {
         // Initiates the GUI object with the Outline provided
         SwingGUI myGUI = new SwingGUI(Outline);
+        return myGUI;
     }
     
     public SwingGUI(Outliner Outline)
@@ -86,6 +90,11 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        // Call method to generate all the labels
        reDrawScreen();
        
+    }
+    
+    public void setOutline(Outliner myOutline)
+    {
+        this.myOutline = myOutline;
     }
     
     public void reDrawScreen()
@@ -233,7 +242,11 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
 
     @Override
     public void keyPressed(KeyEvent e) {
-        keyHandler(e,1);
+        try {
+            keyHandler(e,1);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         // Handle create top level section at the outline
         if (e.getKeyCode() == 10 && Outliner.getSelected() == -1)
         {
@@ -248,10 +261,14 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
 
     @Override
     public void keyReleased(KeyEvent e) {
-        keyHandler(e,2);
+        try {
+            keyHandler(e,2);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
-    public void keyHandler(KeyEvent e, int keyDetector)
+    public void keyHandler(KeyEvent e, int keyDetector) throws JsonProcessingException
     {
         System.out.println(e.getKeyCode());
         int sectionId = Outliner.getSelected();
@@ -272,9 +289,16 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 // For all characters which can be appended to the text
                 if (e.getKeyCode() > 40 && e.getKeyCode() < 144 || e.getKeyCode() == 32)
                 {
-                    Section mySection = Outliner.getAllSections().get(sectionId);
-                    mySection.addChar(e.getKeyChar(),this.typeIndex);
-                    this.typeIndex += 1;
+                    if (e.getKeyCode() == 83 && this.ctrl)
+                    {
+                        Outliner.loadJsonToOutline(Outliner.getJson(0));
+                    }
+                    else
+                    {
+                        Section mySection = Outliner.getAllSections().get(sectionId);
+                        mySection.addChar(e.getKeyChar(),this.typeIndex);
+                        this.typeIndex += 1;
+                    }
                 }
                 // For backspace
                 if (e.getKeyCode() ==  KeyEvent.VK_BACK_SPACE)
