@@ -13,6 +13,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import uk.ac.kingston.ci5105.outliner.Model.*;
 import uk.ac.kingston.ci5105.outliner.Controller.*;
@@ -246,6 +248,10 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
             keyHandler(e,1);
         } catch (JsonProcessingException ex) {
             Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
         // Handle create top level section at the outline
         if (e.getKeyCode() == 10 && Outliner.getSelected() == -1)
@@ -265,10 +271,14 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
             keyHandler(e,2);
         } catch (JsonProcessingException ex) {
             Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException ex) {
+            Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public void keyHandler(KeyEvent e, int keyDetector) throws JsonProcessingException
+    public void keyHandler(KeyEvent e, int keyDetector) throws JsonProcessingException, IOException, URISyntaxException
     {
         System.out.println(e.getKeyCode());
         int sectionId = Outliner.getSelected();
@@ -291,7 +301,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 {
                     if (e.getKeyCode() == 83 && this.ctrl)
                     {
-                        Outliner.loadJsonToOutline(Outliner.getJson(0));
+                        Outliner.loadJsonFromFile();
                     }
                     else
                     {

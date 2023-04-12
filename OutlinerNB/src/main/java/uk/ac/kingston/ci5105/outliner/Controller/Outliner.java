@@ -4,6 +4,7 @@
  */
 package uk.ac.kingston.ci5105.outliner.Controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.net.URISyntaxException;
 import uk.ac.kingston.ci5105.outliner.Model.*;
 import uk.ac.kingston.ci5105.outliner.View.*;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -121,13 +123,24 @@ public class Outliner {
         ObjectMapper myMapper = new ObjectMapper();
         ArrayList myList = new ArrayList();
         myList.add(outline);
-        myMapper.writeValue(new File(Outliner.class.getProtectionDomain().getCodeSource().getLocation()
-    .toURI()),myList);
+        String parentDir = Outliner.class.getProtectionDomain().getCodeSource().getLocation()
+    .toURI().getPath();
+        System.out.println(parentDir);
+        myMapper.writeValue(new File(parentDir+File.separator+".."+File.separator+outline.getName()+".json"),myList);
     }
     
     public static String getJson(int id)
     {
         return Outliner.allChanges.get(id);
+    }
+    
+    public static void loadJsonFromFile(String outlineName) throws IOException, URISyntaxException
+    {
+        ObjectMapper myMapper = new ObjectMapper();
+        String parentDir = Outliner.class.getProtectionDomain().getCodeSource().getLocation()
+    .toURI().getPath();
+        List<Outliner> listOutliner = myMapper.readValue(new File(parentDir+File.separator+".."+File.separator+outlineName+".json"),new TypeReference<List<Outliner>>(){});
+        Outliner.myGUI.setOutline(listOutliner.get(0));
     }
     
     //This will be used to reaload json into the new object
