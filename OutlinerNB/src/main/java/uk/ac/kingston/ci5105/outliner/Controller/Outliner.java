@@ -5,6 +5,9 @@
 package uk.ac.kingston.ci5105.outliner.Controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import uk.ac.kingston.ci5105.outliner.Model.*;
 import uk.ac.kingston.ci5105.outliner.View.*;
 import java.util.ArrayList;
@@ -38,12 +41,12 @@ public class Outliner {
     private static SwingGUI myGUI;
     
     
-    public static void main(String[] args) throws JsonProcessingException
+    public static void main(String[] args) throws JsonProcessingException, URISyntaxException, IOException
     {
         Outliner.onStartUp();
     }
     
-    public static void onStartUp() throws JsonProcessingException
+    public static void onStartUp() throws JsonProcessingException, IOException, URISyntaxException
     {
         // Create main parent section and make it empty
         Outliner Outline = new Outliner();
@@ -113,11 +116,13 @@ public class Outliner {
     }
     
     // This will be used to create a json version of this object and save them
-    public static void saveToJSON(Outliner outline) throws JsonProcessingException
+    public static void saveToJSON(Outliner outline) throws JsonProcessingException, URISyntaxException, IOException
     {
         ObjectMapper myMapper = new ObjectMapper();
-        String myJson = myMapper.writeValueAsString(outline);
-        Outliner.allChanges.add(myJson);
+        ArrayList myList = new ArrayList();
+        myList.add(outline);
+        myMapper.writeValue(new File(Outliner.class.getProtectionDomain().getCodeSource().getLocation()
+    .toURI()),myList);
     }
     
     public static String getJson(int id)
