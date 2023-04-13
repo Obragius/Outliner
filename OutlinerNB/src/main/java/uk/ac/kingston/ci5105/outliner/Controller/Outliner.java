@@ -61,8 +61,6 @@ public class Outliner {
         Outline.createSection("I love cats",null,null,Outliner.sectionCount);
         Outline.setName("My outline");
         
-        Outliner.saveToJSON(Outline);
-        
         
         // Run the view
         Outliner.myGUI = SwingGUI.main(null,Outline);

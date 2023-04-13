@@ -101,6 +101,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        JMenu fileMenu = new JMenu("File");
        menuBar.add(fileMenu);
        JMenuItem loadItem = new JMenuItem("Load File");
+       JMenuItem saveItem = new JMenuItem("Save File");
        ActionListener controlLoadItem = new ActionListener() { 
            @Override
            public void actionPerformed(ActionEvent e) {
@@ -111,9 +112,24 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                }
            }
        };
+       
+       ActionListener controlSaveItem = new ActionListener() { 
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               try {
+                   saveItemEvent(e);
+               } catch (URISyntaxException ex) {
+                   Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+               } catch (IOException ex) {
+                   Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+               }
+           }
+       };
        loadItem.addActionListener(controlLoadItem);
+       saveItem.addActionListener(controlSaveItem);
        
        fileMenu.add(loadItem);
+       fileMenu.add(saveItem);
        this.myFrame.setJMenuBar(menuBar);
        
        // Call method to generate all the labels
@@ -140,6 +156,11 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
               System.out.println("File not found");
             }
         }
+    }
+    
+    public void saveItemEvent(ActionEvent e) throws URISyntaxException, IOException
+    {
+        Outliner.saveToJSON(this.myOutline);
     }
     
     public void setOutline(Outliner myOutline)
