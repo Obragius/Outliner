@@ -37,6 +37,10 @@ public class Outliner {
     private static int sectionSelected = -1;
     // This will store JSON objects to allow to come back to previous state of the program
     private static ArrayList<String> allChanges = new ArrayList();
+    // This will tell if the changes need to be save or if the ctrl z and ctrl x are used
+    private static boolean ctrlEvent;
+    // This will keep track of the ctrl z index
+    private static int ctrlIndex;
     // This will help reassign all id's
     private static int idCount;
     //This will store the gui object which is reponsible for all displays
@@ -61,7 +65,7 @@ public class Outliner {
         Outline.createSection("I love cats",null,null,Outliner.sectionCount);
         Outline.setName("My outline");
         
-        
+        Outliner.saveForCtrlZ(Outline);
         // Run the view
         Outliner.myGUI = SwingGUI.main(null,Outline);
     }
@@ -127,6 +131,64 @@ public class Outliner {
         myMapper.writeValue(new File(parentDir+File.separator+".."+File.separator+outline.getName()+".json"),myList);
     }
     
+    public static void setCtrlEvent(boolean value)
+    {
+        Outliner.ctrlEvent = value;
+    }
+    
+    // This method will save the last 25 states of the outline to allow to go back
+    public static void saveForCtrlZ(Outliner outline) throws JsonProcessingException
+    {
+        if (Outliner.ctrlEvent == false)
+        {
+            ObjectMapper myMapper = new ObjectMapper();
+            String myJson = myMapper.writeValueAsString(outline);
+            ArrayList newChanges = new ArrayList();
+            if (Outliner.allChanges.size() >= 25)
+            {
+                for (int i = 1; i < Outliner.allChanges.size();i++)
+                {
+                    newChanges.add(Outliner.allChanges.get(i));
+                }
+                newChanges.add(myJson);
+                System.out.println("New change saved");
+                Outliner.allChanges = newChanges;
+            }
+            else
+            {
+                Outliner.allChanges.add(myJson);
+            }
+            Outliner.ctrlIndex = Outliner.allChanges.size()-1;
+        }
+        else
+        {
+            Outliner.ctrlEvent = false;
+        }
+    }   
+    
+    public static void loadPrevious() throws JsonProcessingException
+    {
+        System.out.println("loading previous");
+        if (Outliner.ctrlIndex != 0)
+        {
+            Outliner.ctrlIndex -= 1;
+        }
+        Outliner.loadJsonToOutline(Outliner.getJson(Outliner.ctrlIndex));
+        
+    }
+    
+    public static void loadNext() throws JsonProcessingException
+    {
+        System.out.println("loading next");
+        if (Outliner.ctrlIndex+1 < Outliner.allChanges.size()-1)
+        {
+            Outliner.ctrlIndex += 1;
+        }
+        Outliner.loadJsonToOutline(Outliner.getJson(Outliner.ctrlIndex));
+    }
+    
+    
+    
     public static String getJson(int id)
     {
         return Outliner.allChanges.get(id);
@@ -150,6 +212,7 @@ public class Outliner {
         ObjectMapper myMapper = new ObjectMapper();
         Outliner myOutline = myMapper.readValue(givenJson,Outliner.class);
         Outliner.reassignId(myOutline);
+        Outliner.sectionCount = Outliner.getAllSections().size();
         Outliner.myGUI.setOutline(myOutline);
     }
     

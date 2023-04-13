@@ -63,6 +63,8 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     private int typeIndex;
     // to keep track of ctrl press
     private boolean ctrl;
+    // this will keep track if there was an update
+    private boolean changeMade;
     // this is the local timer
     private Timer typingSpace;
     
@@ -285,6 +287,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     public void mouseClicked(MouseEvent e) {
         // Code to select a section so that it can be edited
         Component firedLabel = e.getComponent();
+        System.out.println(firedLabel.getName());
         Section mySection = Outliner.getAllSections().get(Integer.parseInt(firedLabel.getName()));
         int sectionID = mySection.getId();
         if (this.typeChar)
@@ -337,6 +340,11 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                     mySection.editText(myNewText);
                     this.typeIndex -= 1;
                     reDrawScreen();
+                    try {
+                        Outliner.saveForCtrlZ(this.myOutline);
+                    } catch (JsonProcessingException ex) {
+                        Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         }
@@ -353,6 +361,30 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         } catch (URISyntaxException ex) {
             Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
+        if (e.getKeyCode() == 90 && this.ctrl && Outliner.getSelected() == -1)
+        {
+            Outliner.setCtrlEvent(true);
+            try {
+                Outliner.loadPrevious();
+            } catch (JsonProcessingException ex) {
+                Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Outliner.setSelected(-1);
+            this.myOutline.resetSelected();
+            this.typeChar = false;
+        }
+        if (e.getKeyCode() == 88 && this.ctrl && Outliner.getSelected() == -1)
+        {
+            Outliner.setCtrlEvent(true);
+            try {
+                Outliner.loadNext();
+            } catch (JsonProcessingException ex) {
+                Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            Outliner.setSelected(-1);
+            this.myOutline.resetSelected();
+            this.typeChar = false;
+        }
         // Handle create top level section at the outline
         if (e.getKeyCode() == 10 && Outliner.getSelected() == -1)
         {
@@ -362,6 +394,11 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
             this.myOutline.setLeadingSection(this.myOutline.getSections().size()-1);
             newSection.setId(Outliner.getSelected()+1);
             Outliner.reassignId(this.myOutline);
+            try {
+                Outliner.saveForCtrlZ(this.myOutline);
+            } catch (JsonProcessingException ex) {
+                Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -404,11 +441,21 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                     {
                         Outliner.loadJsonFromFile("My outline");
                     }
+                    else if (e.getKeyCode() == 90 && this.ctrl)
+                    {
+                        Outliner.setCtrlEvent(true);
+                        Outliner.loadPrevious();
+                        reDrawScreen();
+                        Outliner.setSelected(-1);
+                        this.myOutline.resetSelected();
+                        this.typeChar = false;
+                    }
                     else
                     {
                         Section mySection = Outliner.getAllSections().get(sectionId);
                         mySection.addChar(e.getKeyChar(),this.typeIndex);
                         this.typeIndex += 1;
+                        this.changeMade = true;
                     }
                 }
                 // For backspace
@@ -470,6 +517,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                                 }
                             }
                             Outliner.setSelected(mySection.getId());
+                            Outliner.reassignId(this.myOutline);
                             this.myOutline.resetSelected();
                             this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
                             this.typeChar = false;
@@ -491,6 +539,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                             this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
                             this.typeChar = false;
                         }
+                        this.changeMade = true;
                     }
                     else
                     {
@@ -528,6 +577,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                     this.myOutline.resetSelected();
                     this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
                     this.typeChar = false;
+                    this.changeMade = true;
                 }
                 // If the user presses ESCAPE character, it unselects the section
                 if (e.getKeyCode() == 27)
@@ -560,6 +610,11 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                         this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
                     }
                     this.typeChar = false;
+                    this.changeMade = true;
+                }
+                if (this.changeMade)
+                {
+                    Outliner.saveForCtrlZ(this.myOutline);
                 }
             }
             else if (keyDetector == 2)
@@ -575,10 +630,12 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 }
             }
         }
+        this.changeMade = false;
         Outliner.reassignId(this.myOutline);
         reDrawScreen();
         this.typingSpace.restart();
     }
+    
     
     
     public void keyTyper()
@@ -611,7 +668,6 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     {
         int sectionId = Outliner.getSelected();
         Section mySection = Outliner.getAllSections().get(sectionId);
-        System.out.println(mySection.getText());
         if (mySection.isHidden() == false)
         {
             String myOldText = mySection.getText();
