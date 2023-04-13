@@ -102,6 +102,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        menuBar.add(fileMenu);
        JMenuItem loadItem = new JMenuItem("Load File");
        JMenuItem saveItem = new JMenuItem("Save File");
+       JMenuItem newItem = new JMenuItem("New Outline");
        ActionListener controlLoadItem = new ActionListener() { 
            @Override
            public void actionPerformed(ActionEvent e) {
@@ -110,6 +111,13 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                } catch (URISyntaxException ex) {
                    Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
                }
+           }
+       };
+       
+       ActionListener controlNewItem = new ActionListener() { 
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               newItemEvent(e);
            }
        };
        
@@ -127,9 +135,11 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        };
        loadItem.addActionListener(controlLoadItem);
        saveItem.addActionListener(controlSaveItem);
+       newItem.addActionListener(controlNewItem);
        
        fileMenu.add(loadItem);
        fileMenu.add(saveItem);
+       fileMenu.add(newItem);
        this.myFrame.setJMenuBar(menuBar);
        
        // Call method to generate all the labels
@@ -158,9 +168,28 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         }
     }
     
+    // this method will call to save the current outline
     public void saveItemEvent(ActionEvent e) throws URISyntaxException, IOException
     {
         Outliner.saveToJSON(this.myOutline);
+    }
+    
+    // this method will create new outline and load it
+    public void newItemEvent(ActionEvent e)
+    {
+        Outliner Outline = new Outliner();
+        String value = JOptionPane.showInputDialog(this.myFrame,"Enter file name","My Outline");
+        System.out.println(value);
+        if (value != null && value != "")
+        {
+            this.myOutline = Outline;
+            this.myOutline.setName(value);
+            Outliner.setSectionCountImidiate(0);
+            Outliner.setSelected(-1);
+            this.myOutline.resetSelected();
+            this.typeChar = false;
+            reDrawScreen();
+        }
     }
     
     public void setOutline(Outliner myOutline)
@@ -176,11 +205,13 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        this.myPanel = new JPanel();
        this.myPanel.setLayout(new BoxLayout(this.myPanel, BoxLayout.Y_AXIS));
        
-       for (int i = 0; i < allJLabels.size(); i++)
+       if (allJLabels != null)
        {
-           this.myPanel.add(allJLabels.get(i));
+        for (int i = 0; i < allJLabels.size(); i++)
+        {
+            this.myPanel.add(allJLabels.get(i));
+        }
        }
-       
        
        this.myFrame.add(this.myPanel);
        

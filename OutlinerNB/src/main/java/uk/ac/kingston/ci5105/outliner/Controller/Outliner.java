@@ -193,6 +193,11 @@ public class Outliner {
     {
         return this.sections.indexOf(givenSection);
     }
+    
+    public static void setSectionCountImidiate(int count)
+    {
+        Outliner.sectionCount = count;
+    }
 
     public String getName() 
     {
