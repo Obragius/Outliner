@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
@@ -36,6 +37,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
+import javax.swing.border.Border;
 /**
  *
  * @author lolki
@@ -247,25 +249,28 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
             {
                 addedText += "      ";
             }
-        JLabel myLabel = new JLabel();
-        myLabel.setOpaque(true);
-        if (givenSection.isSelected())
-        {
-            myLabel.setBackground(Color.red);
-        }
-        if (givenSection.isHidden())
-        {
-            myLabel.hide();
-        }
-        myLabel.setText(addedText+givenSection.getText());
-        myLabel.addMouseListener(this);
-        Integer id = givenSection.getId();
-        myLabel.setName(id.toString());
         // If the section doesn't have child nodes, only return this section text
         if (givenSection.getContent().size() == 0)
         {
             ArrayList myLabelList = new ArrayList();
-            myLabelList.add(myLabel);
+            if (givenSection.isHidden() == false)
+            {
+                JLabel myLabel = new JLabel();
+                myLabel.setOpaque(true);
+                if (givenSection.isSelected())
+                {
+                    myLabel.setBackground(Color.red);
+                }
+                if (givenSection.isHidden())
+                {
+                    myLabel.hide();
+                }
+                myLabel.setText(addedText+givenSection.getText());
+                Integer id = givenSection.getId();
+                myLabel.setName(id.toString());
+                myLabel.addMouseListener(this);
+                myLabelList.add(myLabel);
+            }
             return myLabelList;
         }
         // If the section has child nodes, return this section text and recursevly call this method
@@ -277,7 +282,24 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 mySubLabelList.addAll(this.constructSectionJLabel(givenSection.getContent().get(i),level+1));
             }
             ArrayList myLabelList = new ArrayList();
-            myLabelList.add(myLabel);
+            if (givenSection.isHidden() == false)
+            {
+                JLabel myLabel = new JLabel();
+                myLabel.setOpaque(true);
+                if (givenSection.isSelected())
+                {
+                    myLabel.setBackground(Color.red);
+                }
+                if (givenSection.isHidden())
+                {
+                    //myLabel.hide();
+                }
+                myLabel.setText(addedText+givenSection.getText());
+                Integer id = givenSection.getId();
+                myLabel.setName(id.toString());
+                myLabel.addMouseListener(this);
+                myLabelList.add(myLabel);
+            }
             myLabelList.addAll(mySubLabelList);
             return myLabelList;
         }
@@ -287,7 +309,6 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     public void mouseClicked(MouseEvent e) {
         // Code to select a section so that it can be edited
         Component firedLabel = e.getComponent();
-        System.out.println(firedLabel.getName());
         Section mySection = Outliner.getAllSections().get(Integer.parseInt(firedLabel.getName()));
         int sectionID = mySection.getId();
         if (this.typeChar)
@@ -535,6 +556,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                                 addedSection = mySection.createContainerToMoveTo(this.myOutline);
                             }
                             Outliner.setSelected(mySection.getId());
+                            Outliner.reassignId(this.myOutline);
                             this.myOutline.resetSelected();
                             this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
                             this.typeChar = false;

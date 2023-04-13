@@ -106,7 +106,7 @@ public class Section {
     
     public Section moveSectionToParent(Section givenSection, Outliner myOutline)
     {
-        if (this.parent.isHidden())
+        if (this.parent.isHidden() && this.parent.getContent().size() == 1)
         {
             Outliner.setSectionCount(-1);
             Outliner.deleteAtId(givenSection.getId());

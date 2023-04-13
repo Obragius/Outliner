@@ -234,6 +234,7 @@ public class Outliner {
             newParent.setMiddleSectionWithoutCreate(section, newParent.getContent().size());
             this.deleteSection(this.getLocalId(section));
             section.setParent(newParent);
+            Outliner.reassignId(myOutline);  
         }
         else
         {
