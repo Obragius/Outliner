@@ -83,6 +83,7 @@ public class Section {
             newParent.setMiddleSectionWithoutCreate(this, newParent.getContent().size());
             this.parent.deleteSubSection(this.parent.getLocalId(this));
             this.setParent(newParent);
+            Outliner.reassignId(myOutline);
         }
         else
         {
@@ -98,6 +99,7 @@ public class Section {
             newSection.setContent(newList);
             this.parent.deleteSubSection(this.parent.getLocalId(this));
             this.setParent(newSection);
+            Outliner.reassignId(myOutline);
         }
         return this;
     }
@@ -109,6 +111,7 @@ public class Section {
             Outliner.setSectionCount(-1);
             Outliner.deleteAtId(givenSection.getId());
             givenSection.getParent().deleteSubSectionWithMove(givenSection.getParent().getLocalId(givenSection));
+            Outliner.reassignId(myOutline);
         }
         else
         {

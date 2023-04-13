@@ -28,6 +28,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
@@ -59,6 +63,8 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     private int typeIndex;
     // to keep track of ctrl press
     private boolean ctrl;
+    // this is the local timer
+    private Timer typingSpace;
     
     public static SwingGUI main(String[] args, Outliner Outline)
     {
@@ -79,19 +85,61 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        // Set the object-wide outline object
        this.myOutline = Outline;
        
+       // Action listener using timer to simulate typing in a jlabel
        ActionListener controlTyper = new ActionListener() { 
            @Override
            public void actionPerformed(ActionEvent e) {
                keyTyper();
            }
        };
-       Timer typingSpace = new Timer(500, controlTyper);
-       typingSpace.setRepeats(true);
-       typingSpace.start();
+       this.typingSpace = new Timer(500, controlTyper);
+       this.typingSpace.setRepeats(true);
+       this.typingSpace.start();
+       
+       //Menu bar
+       JMenuBar menuBar = new JMenuBar();
+       JMenu fileMenu = new JMenu("File");
+       menuBar.add(fileMenu);
+       JMenuItem loadItem = new JMenuItem("Load File");
+       ActionListener controlLoadItem = new ActionListener() { 
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               try {
+                   loadItemEvent(e);
+               } catch (URISyntaxException ex) {
+                   Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+               }
+           }
+       };
+       loadItem.addActionListener(controlLoadItem);
+       
+       fileMenu.add(loadItem);
+       this.myFrame.setJMenuBar(menuBar);
        
        // Call method to generate all the labels
        reDrawScreen();
        
+    }
+    
+    //method which will load a saved outline
+    public void loadItemEvent(ActionEvent e) throws URISyntaxException
+    {
+        String value = JOptionPane.showInputDialog(this.myFrame,"Enter file name","My Outline");
+        System.out.println(value);
+        if (value != null && value != "")
+        {
+            try
+            {
+               Outliner.loadJsonFromFile(value);
+               reDrawScreen();
+               Outliner.setSelected(-1);
+               this.myOutline.resetSelected();
+               this.typeChar = false;
+            } catch (IOException ex) 
+            {
+              System.out.println("File not found");
+            }
+        }
     }
     
     public void setOutline(Outliner myOutline)
@@ -185,7 +233,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     public void mouseClicked(MouseEvent e) {
         // Code to select a section so that it can be edited
         Component firedLabel = e.getComponent();
-        Section mySection = this.myOutline.getAllSections().get(Integer.parseInt(firedLabel.getName()));
+        Section mySection = Outliner.getAllSections().get(Integer.parseInt(firedLabel.getName()));
         int sectionID = mySection.getId();
         if (this.typeChar)
         {
@@ -280,6 +328,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     
     public void keyHandler(KeyEvent e, int keyDetector) throws JsonProcessingException, IOException, URISyntaxException
     {
+        this.typingSpace.stop();
         System.out.println(e.getKeyCode());
         int sectionId = Outliner.getSelected();
         if (sectionId != -1)
@@ -301,7 +350,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 {
                     if (e.getKeyCode() == 83 && this.ctrl)
                     {
-                        Outliner.loadJsonFromFile();
+                        Outliner.loadJsonFromFile("My outline");
                     }
                     else
                     {
@@ -357,15 +406,18 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                         {
                             Section mySection = Outliner.getAllSections().get(sectionId);
                             Section addedSection;
-                            if (mySection.getParent().getParent() == null)
+                            if (mySection.getParent()!= null )
                             {
-                                addedSection = this.myOutline.moveSectionToTop(mySection,this.myOutline);
+                                if (mySection.getParent().getParent() == null)
+                                {
+                                    addedSection = this.myOutline.moveSectionToTop(mySection,this.myOutline);
+                                }
+                                else
+                                {
+                                    addedSection = mySection.moveSectionToParent(mySection.getParent(),this.myOutline);
+                                }
                             }
-                            else
-                            {
-                                addedSection = mySection.moveSectionToParent(mySection.getParent(),this.myOutline);
-                            }
-                            Outliner.setSelected(addedSection.getId());
+                            Outliner.setSelected(mySection.getId());
                             this.myOutline.resetSelected();
                             this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
                             this.typeChar = false;
@@ -382,7 +434,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                             {
                                 addedSection = mySection.createContainerToMoveTo(this.myOutline);
                             }
-                            Outliner.setSelected(addedSection.getId());
+                            Outliner.setSelected(mySection.getId());
                             this.myOutline.resetSelected();
                             this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
                             this.typeChar = false;
@@ -471,7 +523,9 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 }
             }
         }
+        Outliner.reassignId(this.myOutline);
         reDrawScreen();
+        this.typingSpace.restart();
     }
     
     
@@ -487,12 +541,15 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
             else
             {
                 Section mySection = Outliner.getAllSections().get(sectionId);
-                String myOldText = mySection.getText();
-                String leftText = myOldText.substring(0, this.typeIndex);
-                String rightText = myOldText.substring(this.typeIndex);
-                String myNewText = leftText+"|"+rightText;
-                mySection.editText(myNewText);
-                this.typeChar = true;
+                if (mySection.isHidden() == false)
+                {
+                    String myOldText = mySection.getText();
+                    String leftText = myOldText.substring(0, this.typeIndex);
+                    String rightText = myOldText.substring(this.typeIndex);
+                    String myNewText = leftText+"|"+rightText;
+                    mySection.editText(myNewText);
+                    this.typeChar = true;
+                }
             }
             reDrawScreen();
         }
@@ -502,12 +559,16 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     {
         int sectionId = Outliner.getSelected();
         Section mySection = Outliner.getAllSections().get(sectionId);
-        String myOldText = mySection.getText();
-        String leftText = myOldText.substring(0, this.typeIndex+1);
-        String rightText = myOldText.substring(this.typeIndex+1);
-        String myNewText = leftText.substring(0, leftText.length()-1)+rightText;
-        mySection.editText(myNewText);
-        this.typeChar = false;
+        System.out.println(mySection.getText());
+        if (mySection.isHidden() == false)
+        {
+            String myOldText = mySection.getText();
+            String leftText = myOldText.substring(0, this.typeIndex+1);
+            String rightText = myOldText.substring(this.typeIndex+1);
+            String myNewText = leftText.substring(0, leftText.length()-1)+rightText;
+            mySection.editText(myNewText);
+            this.typeChar = false;
+        }
     }
     
 }

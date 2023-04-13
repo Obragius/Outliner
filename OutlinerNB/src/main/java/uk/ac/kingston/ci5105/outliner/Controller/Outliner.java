@@ -140,7 +140,10 @@ public class Outliner {
         String parentDir = Outliner.class.getProtectionDomain().getCodeSource().getLocation()
     .toURI().getPath();
         List<Outliner> listOutliner = myMapper.readValue(new File(parentDir+File.separator+".."+File.separator+outlineName+".json"),new TypeReference<List<Outliner>>(){});
-        Outliner.myGUI.setOutline(listOutliner.get(0));
+        Outliner newOutline = listOutliner.get(0);
+        Outliner.reassignId(newOutline);
+        Outliner.sectionCount = Outliner.getAllSections().size();
+        Outliner.myGUI.setOutline(newOutline);
     }
     
     //This will be used to reaload json into the new object
@@ -148,7 +151,7 @@ public class Outliner {
     {
         ObjectMapper myMapper = new ObjectMapper();
         Outliner myOutline = myMapper.readValue(givenJson,Outliner.class);
-        Outliner.reassignParents(myOutline);
+        Outliner.reassignId(myOutline);
         Outliner.myGUI.setOutline(myOutline);
     }
     
@@ -161,17 +164,12 @@ public class Outliner {
         return section;
     }
     
-    // This method will reasign parents to all sections
-    public static void reassignParents(Outliner myOutline)
-    {
-        
-    }
-    
     public Section moveSectionToBottom(Section section, Outliner myOutline)
     {
         if (this.getLocalId(section)-1 != -1)
         {
-            Section newParent = this.getSections().get(this.getLocalId(section)-1);
+            
+            Section newParent = Outliner.getAllSections().get(section.getId()-1);
             newParent.setMiddleSectionWithoutCreate(section, newParent.getContent().size());
             this.deleteSection(this.getLocalId(section));
             section.setParent(newParent);
@@ -254,12 +252,14 @@ public class Outliner {
         {
             if (myOutline.sections.size() != 0)
             {
+                myOutline.sections.get(i).setParent(null);
                 newList.addAll(Outliner.gatherSections(myOutline.sections.get(i)));
             }
         }
         Outliner.allSections = newList;
     }
     
+    // This method will also set parent sections correctly
     public static ArrayList<Section> gatherSections(Section givenSection)
     {
         ArrayList<Section> newList = new ArrayList();
@@ -276,6 +276,7 @@ public class Outliner {
             Outliner.idCount += 1;
             for (int i = 0; i < givenSection.getContent().size();i++)
             {
+                givenSection.getContent().get(i).setParent(givenSection);
                 newList.addAll(Outliner.gatherSections(givenSection.getContent().get(i)));
             }   
         }
@@ -335,6 +336,19 @@ public class Outliner {
     public static ArrayList<Section> getAllSections()
     {
         return Outliner.allSections;
+    }
+    
+    public static ArrayList<Section> getAllNotHidden()
+    {
+        ArrayList myList = new ArrayList();
+        for (int i = 0; i < Outliner.allSections.size();i++)
+        {
+            if (Outliner.allSections.get(i).isHidden() == false)
+            {
+                myList.add(Outliner.allSections.get(i));
+            }
+        }
+        return myList;
     }
     
     public ArrayList<Section> getSections() 
