@@ -70,7 +70,7 @@ public class Outliner {
         Outliner.myGUI = SwingGUI.main(null,Outline);
     }
     
-    public void createSection(String text,User[] user, String[] tag, int priority)
+    public void createSection(String text,ArrayList<User> user, String[] tag, int priority)
     {
         // Create a section using the provided parameters
         // and give it a unqiue runtime id
@@ -80,7 +80,7 @@ public class Outliner {
         Outliner.reassignId(this);
     }
     
-    public Section createSectionAtId(String text,User[] user, String[] tag, int priority, Outliner myOutline)
+    public Section createSectionAtId(String text,ArrayList<User> user, String[] tag, int priority, Outliner myOutline)
     {
         // Create a section using the provided parameters
         // and give it a unqiue runtime id

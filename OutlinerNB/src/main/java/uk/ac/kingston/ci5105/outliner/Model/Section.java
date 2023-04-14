@@ -16,7 +16,7 @@ public class Section {
     // This holds the text value of the section, the text that is being diplayed
     private String text;
     // This is the user object which is related to this section
-    private User[] user;
+    private ArrayList<User> user;
     // This is array of tags which are associated with this section
     private String[] tag;
     // This is the priority of the section
@@ -37,7 +37,7 @@ public class Section {
     @JsonIgnore
     private Section parent;
 
-    public Section(String text, User[] user, String[] tag, int priority, ArrayList<Section> content, int id, int level, Section parent)
+    public Section(String text, ArrayList<User> user, String[] tag, int priority, ArrayList<Section> content, int id, int level, Section parent)
     {
         this.text = text;
         this.user = user;
@@ -56,7 +56,7 @@ public class Section {
         
     }
     
-    public void createSubSection(String text, User[] user, String[] tag, int priority, Outliner myOutline)
+    public void createSubSection(String text, ArrayList<User> user, String[] tag, int priority, Outliner myOutline)
     {
        Section newSection = new Section(text, user, tag, priority, new ArrayList(), Outliner.getSectionCount(),this.level+1,this);
        this.content.add(newSection);
@@ -230,14 +230,24 @@ public class Section {
         this.text = text;
     }
 
-    public User[] getUser() 
+    public ArrayList<User> getUser() 
     {
         return user;
     }
 
-    public void setUser(User[] user) 
+    public void setUser(ArrayList<User> user) 
     {
         this.user = user;
+    }
+    
+    public void setUserCreate( String name)
+    {
+        User myUser = new User();
+        myUser.setName(name);
+        ArrayList<User> myList = new ArrayList();
+        myList.add(myUser);
+        
+        this.user = myList;
     }
 
     public String[] getTag() 

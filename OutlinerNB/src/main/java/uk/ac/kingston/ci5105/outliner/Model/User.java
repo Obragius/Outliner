@@ -18,6 +18,11 @@ public class User {
         this.name = name;
         this.tasks = tasks;
     }
+    
+    public User()
+    {
+        
+    }
 
     public String getName() 
     {

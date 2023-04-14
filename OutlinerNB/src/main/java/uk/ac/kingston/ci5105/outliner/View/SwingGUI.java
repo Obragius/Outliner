@@ -6,6 +6,7 @@ package uk.ac.kingston.ci5105.outliner.View;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -107,10 +108,13 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        //Menu bar
        JMenuBar menuBar = new JMenuBar();
        JMenu fileMenu = new JMenu("File");
+       JMenu sectionMenu = new JMenu("Section");
        menuBar.add(fileMenu);
+       menuBar.add(sectionMenu);
        JMenuItem loadItem = new JMenuItem("Load File");
        JMenuItem saveItem = new JMenuItem("Save File");
        JMenuItem newItem = new JMenuItem("New Outline");
+       JMenuItem userEdit = new JMenuItem("User Edit");
        ActionListener controlLoadItem = new ActionListener() { 
            @Override
            public void actionPerformed(ActionEvent e) {
@@ -141,13 +145,22 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                }
            }
        };
+       
+       ActionListener controlEditUser = new ActionListener() { 
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               addUserEvent();
+           }
+       };
        loadItem.addActionListener(controlLoadItem);
        saveItem.addActionListener(controlSaveItem);
        newItem.addActionListener(controlNewItem);
+       userEdit.addActionListener(controlEditUser);
        
        fileMenu.add(loadItem);
        fileMenu.add(saveItem);
        fileMenu.add(newItem);
+       sectionMenu.add(userEdit);
        this.myFrame.setJMenuBar(menuBar);
        
        // Call method to generate all the labels
@@ -159,7 +172,6 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     public void loadItemEvent(ActionEvent e) throws URISyntaxException
     {
         String value = JOptionPane.showInputDialog(this.myFrame,"Enter file name","My Outline");
-        System.out.println(value);
         if (value != null && value != "")
         {
             try
@@ -200,6 +212,26 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         }
     }
     
+    public void addUserEvent()
+    {
+        String value = JOptionPane.showInputDialog(this.myFrame,"Enter user name","");
+        if (value != null)
+        {
+           if (Outliner.getSelected() != -1)
+           {
+               Section givenSection = Outliner.getAllSections().get(Outliner.getSelected());
+               if (value.equals(""))
+               {
+                   givenSection.setUser(null);
+               }
+               else
+               {
+                    givenSection.setUserCreate(value);
+               }
+           }
+        }
+    }
+    
     public void setOutline(Outliner myOutline)
     {
         this.myOutline = myOutline;
@@ -215,7 +247,6 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
             {
                 position = this.myScrollPane.getVerticalScrollBar().getValue();
             }
-            System.out.println(position);
             this.myPanel.removeAll();
         }
         
@@ -262,11 +293,14 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     
     public ArrayList<JLabel> constructSectionJLabel(Section givenSection, Integer level)
     {
+        ArrayList myLabelList = new ArrayList();
         // Construct the level indent text to add to all text in this level
         String addedText = "-";
+        String emptyText = "  ";
             for (int i = 0;i < level;i++)
             {
                 addedText += "      ";
+                emptyText += "      ";
             }
         // If the section is completed add the completed tag on the end of line
         String completedTag = "";
@@ -274,10 +308,23 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         {
             completedTag = "               | Complete";
         }
+        String user = "Assigned to ";
+        if (givenSection.getUser() != null)
+        {
+            user += givenSection.getUser().get(0).getName();
+            JLabel userLabel = new JLabel();
+            userLabel.setOpaque(true);
+            userLabel.setFont(new Font("Verdana",Font.ITALIC,12));
+            userLabel.setText(emptyText+user);
+            if (givenSection.isSelected())
+            {
+                userLabel.setBackground(new Color(185, 193, 250));
+            }
+            myLabelList.add(userLabel);
+        }
         // If the section doesn't have child nodes, only return this section text
         if (givenSection.getContent().size() == 0)
         {
-            ArrayList myLabelList = new ArrayList();
             if (givenSection.isHidden() == false)
             {
                 JLabel myLabel = new JLabel();
@@ -306,7 +353,6 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
             {
                 mySubLabelList.addAll(this.constructSectionJLabel(givenSection.getContent().get(i),level+1));
             }
-            ArrayList myLabelList = new ArrayList();
             if (givenSection.isHidden() == false)
             {
                 JLabel myLabel = new JLabel();
