@@ -1,7 +1,7 @@
 # Outline Project
 Software Development Plan
 - **Start date**: 19.01.2023
-- **Due date**: 07.04.2023
+- **Due date**: 14.04.2023
 - **Author**: @k1801606
 - **Collaborators**: null
 - **Repository**: https://gitlab.com/KUGitlab/ci5105/portfolio2022/K1801606/Outliner
@@ -29,7 +29,7 @@ The app must be multi-purposful and allow the user to determine the list feel.
 	<th> R7 - OO Design ✓ </th>
 	<th> R8 - Edit Section ✓</th>
 	<th> R9 - Delete Section ✓</th>
-	<th> R10 - Mark Section Complete </th>
+	<th> R10 - Mark Section Complete ✓</th>
 	<th> R11 - Edit Subsection ✓ </th>
 	<th> R12 - Delete Subsection  ✓</th>
 	<th> R13 - Save to a file ✓</th>
@@ -38,8 +38,8 @@ The app must be multi-purposful and allow the user to determine the list feel.
 <tr>
 	<th> Could Have </th>
 	<th> R15 - Search func </th>
-	<th> R16 - Add a tag </th>
-	<th> R17 - Edit a tag </th>
+	<th> R16 - Add a tag ✓</th>
+	<th> R17 - Edit a tag ✓</th>
 	<th> R18 - Sort Sections </th>
 	<th> R19 - Reorder Sections ✓</th>
 	<th> R20 - Retrieve data from Web </th>
@@ -144,10 +144,6 @@ The app must be multi-purposful and allow the user to determine the list feel.
 | **Description** | A section needs be updated by the user using the GUI elements with ability to change attributes of the section |
 | **Pre-condition** | a Section needs to be present for it to be edited and changes need to be visible to the user |
 | **Post-condition** | After a section is chnaged the user needs to be able to see the change and be able to repeat the process |
-| **Design notes** | |
-| | |
-| | |
-| | |
 | **Parameters**| The VALUE which need to be changed |
 | **Success** | |
 | | - User can edit a section |
@@ -160,443 +156,155 @@ The app must be multi-purposful and allow the user to determine the list feel.
 | **Pre-condition** | A section need to be present to delete it |
 | **Post-condition** | A section need to disapear and not be saved in memory after proram closes |
 | **Design notes** | |
-| | |
-| | |
-| | |
-| **Parameters**| |
-| **Step sequence** | |
-| | |
-| | |
-| | |
+| **Parameters**| parameter would be ID of the ection to delete |
 | **Success** | |
 | | - User can delete a section |
-| | |
-| | |
-| **Tests** | |
-| | |
-| | |
-| | |
-| **Errors** | |
-| | |
-| | |
-| | |
-| **Alternative Flows** | |
-| | |
-| | |
-| | |
+| | - Deleted section is not visible |
+| | - Deleted section can be brought back if deleted by mistake |
 
 
 | **R10** | **Mark Section Complete**|
 | ------ | ------------------------ |
 | **Description** | The user should be able to mark a section as complete or done, this should be diplayed to the user and undone if neccesary |
-| **Pre-condition** | |
-| **Post-condition** | |
+| **Pre-condition** | the section needs to be present in the model |
+| **Post-condition** | the complete tag needs to be displayed to the user |
 | **Design notes** | |
-| | |
-| | |
-| | |
-| **Parameters**| |
-| **Step sequence** | |
-| | |
-| | |
-| | |
 | **Success** | |
-| | |
-| | |
-| | |
-| **Tests** | |
-| | |
-| | |
-| | |
-| **Errors** | |
-| | |
-| | |
-| | |
-| **Alternative Flows** | |
-| | |
-| | |
-| | |
+| | - Section can be marked as complete |
+| | - The change is displayed to the user |
+| | - Section that is complete can be un-completed|
 
 
 | **R11** | **Edit Subsection**|
 | ------ | ------------------------ |
-| **Description** | The user should be able to edit a subsection attributes using GUI elements |
-| **Pre-condition** | |
-| **Post-condition** | |
-| **Design notes** | |
-| | |
-| | |
-| | |
-| **Parameters**| |
-| **Step sequence** | |
-| | |
-| | |
-| | |
-| **Success** | |
-| | |
-| | |
-| | |
-| **Tests** | |
-| | |
-| | |
-| | |
-| **Errors** | |
-| | |
-| | |
-| | |
-| **Alternative Flows** | |
-| | |
-| | |
-| | |
+| **Description** | The user should be able to edit a subsection attributes using GUI elements ( SUB SECTION HAS SAME MODEL AS SECTION ! ) |
+
 
 
 | **R12** | **Delete Subsection**|
 | ------ | ------------------------ |
-| **Description** | The user should be able to delete a subsection and all child elements using the GUI elements |
-| **Pre-condition** | |
-| **Post-condition** | |
-| **Design notes** | |
-| | |
-| | |
-| | |
-| **Parameters**| |
-| **Step sequence** | |
-| | |
-| | |
-| | |
-| **Success** | |
-| | |
-| | |
-| | |
-| **Tests** | |
-| | |
-| | |
-| | |
-| **Errors** | |
-| | |
-| | |
-| | |
-| **Alternative Flows** | |
-| | |
-| | |
-| | |
+| **Description** | The user should be able to delete a subsection and all child elements using the GUI elements ( SUB SECTION HAS SAME MODEL AS SECTION ! ) |
 
 
 | **R13** | **Save to a file**|
 | ------ | ------------------------ |
 | **Description** | The user should be able to save a file storing the outline with all sections and subsections to access in another session using the GUI elements |
-| **Pre-condition** | |
-| **Post-condition** | |
+| **Pre-condition** | The Outline should have a name for the file to be named with the same name |
+| **Post-condition** | The Outline should be stored with the program, so that later it can be loaded to be edited |
 | **Design notes** | |
-| | |
+| | For right now the project saves Outline files in the target folder of the project, however it will be easy to change in future |
 | | |
 | | |
 | **Parameters**| |
-| **Step sequence** | |
-| | |
-| | |
-| | |
 | **Success** | |
-| | |
-| | |
-| | |
+| | - An Outline can be saved to be edited later |
+| | - A file created is efficient at storing the program data|
 | **Tests** | |
-| | |
-| | |
-| | |
+| | Outline saved and loaded are identical |
+| | Outline save doesn't crash the application |
 | **Errors** | |
-| | |
-| | |
-| | |
-| **Alternative Flows** | |
-| | |
-| | |
-| | |
+| | When outline is saved it sometimes saves the character that is used to type |
+| | if the user uses Outline name which violates OS specific file name rules, the app may crash|
 
 
 | **R14** | **Load from a file**|
 | ------ | ------------------------ |
 | **Description** | The user should be able to load the outline from a file with all sections and subsections loaded and edit the outline using the GUI elements |
-| **Pre-condition** | |
-| **Post-condition** | |
+| **Pre-condition** | The file to load need to have already been created and put in the appropriate load folder |
+| **Post-condition** | The outline is loaded and is presented to the user and can be edited |
 | **Design notes** | |
 | | |
 | | |
 | | |
-| **Parameters**| |
+| **Parameters**| The NAME of the outline to be loaded is required |
 | **Step sequence** | |
-| | |
-| | |
-| | |
+| | - Folder is searched for the appropriate JSON file |
+| | - Matching file is loaded as an object|
+| | - Object is loaded to the controller and the GUI ready for editing |
 | **Success** | |
-| | |
-| | |
-| | |
-| **Tests** | |
-| | |
-| | |
-| | |
-| **Errors** | |
-| | |
-| | |
-| | |
-| **Alternative Flows** | |
-| | |
-| | |
-| | |
+| | - Saved Outline can be accessed and edited |
+| | - Edited Outline can be save again|
 
 
 | **R15** | **Search Function**|
 | ------ | ------------------------ |
 | **Description** | Simple search function which uses some text inputed by the user using the GUI to compare this to text attributes of the section and subsections and return a view sorting the elements to have matching sections most visible |
-| **Pre-condition** | |
-| **Post-condition** | |
+| **Pre-condition** | Some sections need to exist for the search to work |
+| **Post-condition** | The sections which are found need to be presented to the user |
 | **Design notes** | |
-| | |
-| | |
-| | |
-| **Parameters**| |
+| **Parameters**| search VALUE needs to be typed in by the user |
 | **Step sequence** | |
-| | |
-| | |
-| | |
+| | - RegexRules are set |
+| | - All Sections are checked for match |
+| | - First match is selected |
 | **Success** | |
-| | |
-| | |
-| | |
-| **Tests** | |
-| | |
-| | |
-| | |
-| **Errors** | |
-| | |
-| | |
-| | |
-| **Alternative Flows** | |
-| | |
-| | |
-| | |
+| | The outline which matches the text is found and selected |
+| | The outline which matches the user is found and selected |
 
 
 | **R16** | **Add a tag**|
 | ------ | ------------------------ |
 | **Description** | The user should be able to add a tag which can identify groups of sections and subsections which are visible to the user in the GUI elements |
-| **Pre-condition** | |
-| **Post-condition** | |
+| **Pre-condition** | the Section needs to exist to hold a tag |
+| **Post-condition** | the section tag needs to be visible to the user |
 | **Design notes** | |
-| | |
-| | |
-| | |
-| **Parameters**| |
+| **Parameters**| The string VALUE to be added as a tag |
 | **Step sequence** | |
-| | |
-| | |
-| | |
+| | - Get the tag string from the user |
+| | - Call the method to add it to the Section |
+| | - Display new tag to the user |
 | **Success** | |
-| | |
-| | |
-| | |
+| | - User can add a tag to the Outline |
+| | - User can add multiple tags to the same outline |
 | **Tests** | |
-| | |
-| | |
-| | |
+| | - User cannot add empty Tags|
+| | - User cannot add the same tag twice |
+| | - User can add multyple tags in one call |
 | **Errors** | |
-| | |
-| | |
-| | |
-| **Alternative Flows** | |
-| | |
-| | |
-| | |
+| | - User can add same tag multiple times and then they need to be removed one by one |
+| | - Only one tag can be added at a time |
 
 
 | **R17** | **Edit a tag**|
 | ------ | ------------------------ |
 | **Description** | The user should be able to edit a tag, editing the text of the tag |
-| **Pre-condition** | |
-| **Post-condition** | |
+| **Pre-condition** | The tag needs to be already created to edit it |
+| **Post-condition** | the tag text needs to change and diplayed to the user with the change |
 | **Design notes** | |
-| | |
-| | |
-| | |
-| **Parameters**| |
-| **Step sequence** | |
-| | |
-| | |
-| | |
-| **Success** | |
-| | |
-| | |
-| | |
-| **Tests** | |
-| | |
-| | |
-| | |
-| **Errors** | |
-| | |
-| | |
-| | |
-| **Alternative Flows** | |
-| | |
-| | |
-| | |
+| | In my approach you can edit tag by deleting it and just making a new one, it is slightly longer but functional |
+| **Parameters**| The string VALUE to be edited as a tag |
 
 
 | **R18** | **Sort Sections**|
 | ------ | ------------------------ |
 | **Description** | The user should be able to sort the sections and subsections to be diplayed in different order in the GUI elements |
-| **Pre-condition** | |
-| **Post-condition** | |
-| **Design notes** | |
-| | |
-| | |
-| | |
-| **Parameters**| |
-| **Step sequence** | |
-| | |
-| | |
-| | |
-| **Success** | |
-| | |
-| | |
-| | |
-| **Tests** | |
-| | |
-| | |
-| | |
-| **Errors** | |
-| | |
-| | |
-| | |
-| **Alternative Flows** | |
-| | |
-| | |
-| | |
+| **Status** | Canceled for the scope of this project due to time constraints |
 
 
 | **R19** | **Reorder Sections**|
 | ------ | ------------------------ |
 | **Description** | The user should be able to reorder sections and subsections also moving all the child elements with the parent element |
-| **Pre-condition** | |
-| **Post-condition** | |
+| **Pre-condition** | There need to be multiple sections present to move the around |
+| **Post-condition** | the section is moved to the appropriate position and it is displayed to the user |
 | **Design notes** | |
-| | |
-| | |
-| | |
-| **Parameters**| |
+| | - There are two types of movement 1. Within a parent section 2. To a new parent or to an existing parent sections |
 | **Step sequence** | |
-| | |
-| | |
-| | |
+| | - Determine where the user want section to be moved to |
+| | - Move the section and align the attributes with this change |
+| | - Present the change in the View |
 | **Success** | |
-| | |
-| | |
-| | |
-| **Tests** | |
-| | |
-| | |
-| | |
-| **Errors** | |
-| | |
-| | |
-| | |
-| **Alternative Flows** | |
-| | |
-| | |
-| | |
+| | - Sections can be moved horizontally |
+| | - Section can be moved vertically|
+| **Tests** | There are many possible errors, test that rearanging does not crash the app |
 
 
 | **R20** | **Retrieve data from Web**|
 | ------ | ------------------------ |
 | **Description** | Get data from the web and map it onto sections and subsections? |
-| **Pre-condition** | |
-| **Post-condition** | |
-| **Design notes** | |
-| | |
-| | |
-| | |
-| **Parameters**| |
-| **Step sequence** | |
-| | |
-| | |
-| | |
-| **Success** | |
-| | |
-| | |
-| | |
-| **Tests** | |
-| | |
-| | |
-| | |
-| **Errors** | |
-| | |
-| | |
-| | |
-| **Alternative Flows** | |
-| | |
-| | |
-| | |
+| **Status** | Canceled for the scope of this project due to time constraints |
 
 
 | **R21** | **Format Text**|
 | ------ | ------------------------ |
 | **Description** | The user can edit how the text is displayed, color, font size and toher features |
-| **Pre-condition** | |
-| **Post-condition** | |
-| **Design notes** | |
-| | |
-| | |
-| | |
-| **Parameters**| |
-| **Step sequence** | |
-| | |
-| | |
-| | |
-| **Success** | |
-| | |
-| | |
-| | |
-| **Tests** | |
-| | |
-| | |
-| | |
-| **Errors** | |
-| | |
-| | |
-| | |
-| **Alternative Flows** | |
-| | |
-| | |
-| | |
-
-
-| **R1** | **Structured Data Model**|
-| ------ | ------------------------ |
-| **Description** | |
-| **Pre-condition** | |
-| **Post-condition** | |
-| **Design notes** | |
-| | |
-| | |
-| | |
-| **Parameters**| |
-| **Step sequence** | |
-| | |
-| | |
-| | |
-| **Success** | |
-| | |
-| | |
-| | |
-| **Tests** | |
-| | |
-| | |
-| | |
-| **Errors** | |
-| | |
-| | |
-| | |
-| **Alternative Flows** | |
-| | |
-| | |
-| | |
+| **Status** | Canceled for the scope of this project due to time constraints |
