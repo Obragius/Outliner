@@ -129,7 +129,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
            @Override
            public void actionPerformed(ActionEvent e) {
                try {
-                   saveItemEvent(e);
+                   saveItemEvent();
                } catch (URISyntaxException ex) {
                    Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
                } catch (IOException ex) {
@@ -173,7 +173,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     }
     
     // this method will call to save the current outline
-    public void saveItemEvent(ActionEvent e) throws URISyntaxException, IOException
+    public void saveItemEvent() throws URISyntaxException, IOException
     {
         Outliner.saveToJSON(this.myOutline);
     }
@@ -203,6 +203,12 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     
     public void reDrawScreen()
     {
+       // make sure to remove all existing labels
+        if (this.myPanel != null)
+        {
+            this.myPanel.removeAll();
+        }
+        
        // Get all jlabels using the two recursive methods
        allJLabels = constructJLabel(); 
        
@@ -265,7 +271,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 myLabel.setOpaque(true);
                 if (givenSection.isSelected())
                 {
-                    myLabel.setBackground(Color.red);
+                    myLabel.setBackground(new Color(185, 193, 250));
                 }
                 if (givenSection.isHidden())
                 {
@@ -294,7 +300,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 myLabel.setOpaque(true);
                 if (givenSection.isSelected())
                 {
-                    myLabel.setBackground(Color.red);
+                    myLabel.setBackground(new Color(185, 193, 250));
                 }
                 if (givenSection.isHidden())
                 {
@@ -466,7 +472,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 {
                     if (e.getKeyCode() == 83 && this.ctrl)
                     {
-                        Outliner.loadJsonFromFile("My outline");
+                        this.saveItemEvent();
                     }
                     else if (e.getKeyCode() == 90 && this.ctrl)
                     {
