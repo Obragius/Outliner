@@ -636,34 +636,80 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 // For arrow up and arrow down
                 if (e.getKeyCode() == 38 || e.getKeyCode() == 40)
                 {
-                    if (e.getKeyCode() == 38)
+                    if (this.ctrl)
                     {
+                        // move the section within it's parent
                         if (Outliner.getSelected()-1 != -1)
                         {
-                            // Set the new selected and reset selected for each section
-                            int checkHidden = 0;
-                            while(Outliner.getAllSections().get(Outliner.getSelected()-1+checkHidden).isHidden())
+                            Section mySection = Outliner.getAllSections().get(sectionId);
+                            if (mySection.getParent() != null)
                             {
-                                checkHidden-=1;
+                                Section parentSection = mySection.getParent();
+                                if (parentSection.getContent().size() > 1)
+                                {
+                                    if (e.getKeyCode() == 38)
+                                    {
+                                        if (parentSection.getLocalId(mySection) > 0)
+                                        {
+                                            int newID = parentSection.getLocalId(mySection)-1;
+                                            parentSection.deleteSubSection(newID+1);
+                                            parentSection.setMiddleSectionWithoutCreate(mySection,newID);
+                                            Outliner.setSelected(mySection.getId()-1);
+                                            Outliner.reassignId(this.myOutline);
+                                            this.myOutline.resetSelected();
+                                            this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
+                                            this.typeChar = false;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (parentSection.getLocalId(mySection) < parentSection.getContent().size()-1)
+                                        {
+                                            int newID = parentSection.getLocalId(mySection)+1;
+                                            parentSection.deleteSubSection(newID-1);
+                                            parentSection.setMiddleSectionWithoutCreate(mySection,newID);
+                                            Outliner.setSelected(mySection.getId()+1);
+                                            Outliner.reassignId(this.myOutline);
+                                            this.myOutline.resetSelected();
+                                            this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
+                                            this.typeChar = false;
+                                        }
+                                    }
+                                }
                             }
-                            Outliner.setSelected(Outliner.getSelected()-1+checkHidden);
-                            this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
-                            this.myOutline.resetSelected();
                         }
                     }
                     else
                     {
-                        if (Outliner.getSelected()+1 != Outliner.getSectionCount())
+                        if (e.getKeyCode() == 38)
                         {
-                            // Set the new selected and reset selected for each section
-                            int checkHidden = 0;
-                            while(Outliner.getAllSections().get(Outliner.getSelected()+1+checkHidden).isHidden())
+                            if (Outliner.getSelected()-1 != -1)
                             {
-                                checkHidden+=1;
+                                // Set the new selected and reset selected for each section
+                                int checkHidden = 0;
+                                while(Outliner.getAllSections().get(Outliner.getSelected()-1+checkHidden).isHidden())
+                                {
+                                    checkHidden-=1;
+                                }
+                                Outliner.setSelected(Outliner.getSelected()-1+checkHidden);
+                                this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
+                                this.myOutline.resetSelected();
                             }
-                            Outliner.setSelected(Outliner.getSelected()+1+checkHidden);
-                            this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
-                            this.myOutline.resetSelected();
+                        }
+                        else
+                        {
+                            if (Outliner.getSelected()+1 != Outliner.getSectionCount())
+                            {
+                                // Set the new selected and reset selected for each section
+                                int checkHidden = 0;
+                                while(Outliner.getAllSections().get(Outliner.getSelected()+1+checkHidden).isHidden())
+                                {
+                                    checkHidden+=1;
+                                }
+                                Outliner.setSelected(Outliner.getSelected()+1+checkHidden);
+                                this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
+                                this.myOutline.resetSelected();
+                            }
                         }
                     }
                 }
