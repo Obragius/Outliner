@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.KeyboardFocusManager;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -35,6 +36,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JPanel;
+import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
 import javax.swing.border.Border;
@@ -48,6 +50,8 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     private JFrame myFrame;
     // The panel which contains all the labels with the sections
     private JPanel myPanel;
+    // The scroll pane to allow for scrolling
+    private JScrollPane myScrollPane;
     // ArrayList which contains all Jlabels, it is proceduraly generated
     // by accessing the outliner object
     private ArrayList<JLabel> allJLabels;
@@ -204,8 +208,14 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     public void reDrawScreen()
     {
        // make sure to remove all existing labels
+        int position = 0;
         if (this.myPanel != null)
         {
+            if (Outliner.getSelected() != -1)
+            {
+                position = this.myScrollPane.getVerticalScrollBar().getValue();
+            }
+            System.out.println(position);
             this.myPanel.removeAll();
         }
         
@@ -223,7 +233,10 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         }
        }
        
-       this.myFrame.add(this.myPanel);
+       this.myScrollPane = new JScrollPane(this.myPanel);
+       this.myScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+       this.myFrame.setContentPane(this.myScrollPane);
+       this.myScrollPane.getVerticalScrollBar().setValue(position);
        
        this.myFrame.setVisible(true);
     }
@@ -691,24 +704,24 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         int sectionId = Outliner.getSelected();
         if (sectionId != -1)
         {
-            if (this.typeChar)
-            {
-                keyTyperRemover();
-            }
-            else
-            {
-                Section mySection = Outliner.getAllSections().get(sectionId);
-                if (mySection.isHidden() == false)
+                if (this.typeChar)
                 {
-                    String myOldText = mySection.getText();
-                    String leftText = myOldText.substring(0, this.typeIndex);
-                    String rightText = myOldText.substring(this.typeIndex);
-                    String myNewText = leftText+"|"+rightText;
-                    mySection.editText(myNewText);
-                    this.typeChar = true;
+                    keyTyperRemover();
                 }
-            }
-            reDrawScreen();
+                else
+                {
+                    Section mySection = Outliner.getAllSections().get(sectionId);
+                    if (mySection.isHidden() == false)
+                    {
+                        String myOldText = mySection.getText();
+                        String leftText = myOldText.substring(0, this.typeIndex);
+                        String rightText = myOldText.substring(this.typeIndex);
+                        String myNewText = leftText+"|"+rightText;
+                        mySection.editText(myNewText);
+                        this.typeChar = true;
+                    }
+                }
+                reDrawScreen();
         }
     }
     
