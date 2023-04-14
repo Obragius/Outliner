@@ -56,14 +56,6 @@ public class Outliner {
     {
         // Create main parent section and make it empty
         Outliner Outline = new Outliner();
-        Outline.createSection("I love dogs",null,Outliner.sectionCount);
-        Section firstSection = Outline.getSections().get(0);
-        firstSection.createSubSection("I love cute dogs", null, Outliner.sectionCount,Outline);
-        Section secondSection = firstSection.getContent().get(0);
-        secondSection.createSubSection("Cute dogs are the best", null, Outliner.sectionCount,Outline);
-        firstSection.createSubSection("Cute dogs are great", null, Outliner.sectionCount,Outline);
-        Outline.createSection("I love cats",null,Outliner.sectionCount);
-        Outline.setName("My outline");
         
         Outliner.saveForCtrlZ(Outline);
         // Run the view
@@ -348,31 +340,6 @@ public class Outliner {
         }
         return newList;
     }
-    
-      // Code used with an old reassign ID
-//    public static void reassignIdWithoutCreate(int index, Section givenSection, int oldIndex)
-//    {
-//        ArrayList newList = new ArrayList();
-//        for (int i = 0; i < index; i++)
-//        {
-//            if (i != oldIndex)
-//            {
-//                if (i > oldIndex)
-//                {
-//                    Outliner.allSections.get(i).setId(Outliner.allSections.get(i).getId()-1);
-//                }
-//            newList.add(Outliner.allSections.get(i));
-//            }
-//        }
-//        
-//        newList.add(givenSection);
-//        for (int i = index; i < Outliner.sectionCount; i++)
-//        {
-//            Outliner.allSections.get(i).setId(Outliner.allSections.get(i).getId()+1);
-//            newList.add(Outliner.allSections.get(i));
-//        }
-//        Outliner.allSections = newList;
-//    }
     
     public static void deleteAtId(int index)
     {

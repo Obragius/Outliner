@@ -12,12 +12,6 @@ public class User {
     
     private String name;
     private int[] tasks;
-
-    public User(String name, int[] tasks) 
-    {
-        this.name = name;
-        this.tasks = tasks;
-    }
     
     public User()
     {
