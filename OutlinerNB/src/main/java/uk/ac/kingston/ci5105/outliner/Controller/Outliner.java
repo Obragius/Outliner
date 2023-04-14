@@ -143,7 +143,7 @@ public class Outliner {
             ObjectMapper myMapper = new ObjectMapper();
             String myJson = myMapper.writeValueAsString(outline);
             ArrayList newChanges = new ArrayList();
-            if (Outliner.allChanges.size() >= 25)
+            if (Outliner.allChanges.size() >= 100)
             {
                 for (int i = 1; i < Outliner.allChanges.size();i++)
                 {
@@ -172,7 +172,7 @@ public class Outliner {
         {
             Outliner.ctrlIndex -= 1;
         }
-        Outliner.loadJsonToOutline(Outliner.getJson(Outliner.ctrlIndex));
+        Outliner.loadJsonToOutline(Outliner.getJSON(Outliner.ctrlIndex));
         
     }
     
@@ -183,12 +183,12 @@ public class Outliner {
         {
             Outliner.ctrlIndex += 1;
         }
-        Outliner.loadJsonToOutline(Outliner.getJson(Outliner.ctrlIndex));
+        Outliner.loadJsonToOutline(Outliner.getJSON(Outliner.ctrlIndex));
     }
     
     
     
-    public static String getJson(int id)
+    public static String getJSON(int id)
     {
         return Outliner.allChanges.get(id);
     }
@@ -349,29 +349,30 @@ public class Outliner {
         return newList;
     }
     
-    public static void reassignIdWithoutCreate(int index, Section givenSection, int oldIndex)
-    {
-        ArrayList newList = new ArrayList();
-        for (int i = 0; i < index; i++)
-        {
-            if (i != oldIndex)
-            {
-                if (i > oldIndex)
-                {
-                    Outliner.allSections.get(i).setId(Outliner.allSections.get(i).getId()-1);
-                }
-            newList.add(Outliner.allSections.get(i));
-            }
-        }
-        
-        newList.add(givenSection);
-        for (int i = index; i < Outliner.sectionCount; i++)
-        {
-            Outliner.allSections.get(i).setId(Outliner.allSections.get(i).getId()+1);
-            newList.add(Outliner.allSections.get(i));
-        }
-        Outliner.allSections = newList;
-    }
+      // Code used with an old reassign ID
+//    public static void reassignIdWithoutCreate(int index, Section givenSection, int oldIndex)
+//    {
+//        ArrayList newList = new ArrayList();
+//        for (int i = 0; i < index; i++)
+//        {
+//            if (i != oldIndex)
+//            {
+//                if (i > oldIndex)
+//                {
+//                    Outliner.allSections.get(i).setId(Outliner.allSections.get(i).getId()-1);
+//                }
+//            newList.add(Outliner.allSections.get(i));
+//            }
+//        }
+//        
+//        newList.add(givenSection);
+//        for (int i = index; i < Outliner.sectionCount; i++)
+//        {
+//            Outliner.allSections.get(i).setId(Outliner.allSections.get(i).getId()+1);
+//            newList.add(Outliner.allSections.get(i));
+//        }
+//        Outliner.allSections = newList;
+//    }
     
     public static void deleteAtId(int index)
     {
@@ -475,14 +476,11 @@ public class Outliner {
         ArrayList newList = new ArrayList();
         for (int i = 0; i <= newID-1;i++)
         {
-            //System.out.println(this.content.get(i).getText());
             newList.add(this.sections.get(i));
         }
         newList.add(givenSection);
-        //System.out.println(newID);
         for (int i = newID; i < this.sections.size();i++)
         {
-            //System.out.println(this.content.get(i).getText());
             newList.add(this.sections.get(i));
         }
         this.sections = newList;

@@ -46,8 +46,6 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
 {
     // Main frame of the program
     private JFrame myFrame;
-    // Unused text area, maybe needed later
-    private JTextArea myText;
     // The panel which contains all the labels with the sections
     private JPanel myPanel;
     // ArrayList which contains all Jlabels, it is proceduraly generated
@@ -84,6 +82,8 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        this.myFrame.setTitle("Outliner");
        this.myFrame.setSize(600,1200);
        this.myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       
+       
        // While the frame is in focus, listen for key presses
        this.myFrame.addKeyListener(this);
        // Set the object-wide outline object

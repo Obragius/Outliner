@@ -174,9 +174,9 @@ public class Section {
         this.selected = true;
     }
     
-    public void setHidden(boolean arg)
+    public void setHidden(boolean value)
     {
-        this.hidden = arg;
+        this.hidden = value;
     }
     
     public boolean isHidden()
@@ -304,14 +304,11 @@ public class Section {
         ArrayList newList = new ArrayList();
         for (int i = 0; i <= newID-1;i++)
         {
-            //System.out.println(this.content.get(i).getText());
             newList.add(this.content.get(i));
         }
         newList.add(givenSection);
-        //System.out.println(newID);
         for (int i = newID; i < this.content.size()-1;i++)
         {
-            //System.out.println(this.content.get(i).getText());
             newList.add(this.content.get(i));
         }
         this.content = newList;
@@ -322,14 +319,11 @@ public class Section {
         ArrayList newList = new ArrayList();
         for (int i = 0; i <= newID-1;i++)
         {
-            //System.out.println(this.content.get(i).getText());
             newList.add(this.content.get(i));
         }
         newList.add(givenSection);
-        //System.out.println(newID);
         for (int i = newID; i < this.content.size();i++)
         {
-            //System.out.println(this.content.get(i).getText());
             newList.add(this.content.get(i));
         }
         this.content = newList;
