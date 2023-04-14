@@ -19,6 +19,8 @@ public class Section {
     private ArrayList<User> user;
     // This is array of tags which are associated with this section
     private ArrayList<String> tag;
+    // String for the date
+    private String date;
     // This is the priority of the section
     private int priority;
     // This arraylist contains all the child sections of this sections
@@ -228,6 +230,16 @@ public class Section {
     public void setText(String text) 
     {
         this.text = text;
+    }
+    
+    public String getDate() 
+    {
+        return date;
+    }
+
+    public void setDate(String date) 
+    {
+        this.date = date;
     }
 
     public ArrayList<User> getUser() 

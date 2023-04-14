@@ -117,6 +117,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        JMenuItem userEdit = new JMenuItem("User Edit");
        JMenuItem addTag = new JMenuItem("Add Tag");
        JMenuItem removeTag = new JMenuItem("Remove Tag");
+       JMenuItem editDate = new JMenuItem("Edit Date");
        ActionListener controlLoadItem = new ActionListener() { 
            @Override
            public void actionPerformed(ActionEvent e) {
@@ -168,12 +169,19 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                removeTagEvent();
            }
        };
+       ActionListener controlEditDate = new ActionListener() { 
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               editDateEvent();
+           }
+       };
        loadItem.addActionListener(controlLoadItem);
        saveItem.addActionListener(controlSaveItem);
        newItem.addActionListener(controlNewItem);
        userEdit.addActionListener(controlEditUser);
        addTag.addActionListener(controlAddTag);
        removeTag.addActionListener(controlRemoveTag);
+       editDate.addActionListener(controlEditDate);
        
        fileMenu.add(loadItem);
        fileMenu.add(saveItem);
@@ -181,6 +189,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        sectionMenu.add(userEdit);
        sectionMenu.add(addTag);
        sectionMenu.add(removeTag);
+       sectionMenu.add(editDate);
        this.myFrame.setJMenuBar(menuBar);
        
        // Call method to generate all the labels
@@ -278,6 +287,26 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         }
     }
     
+    public void editDateEvent()
+    {
+        String value = JOptionPane.showInputDialog(this.myFrame,"Enter new date","");
+        if (value != null)
+        {
+           if (Outliner.getSelected() != -1)
+           {
+               Section givenSection = Outliner.getAllSections().get(Outliner.getSelected());
+               if (value == "")
+               {
+                   givenSection.setDate(null);
+               }
+               else
+               {
+                givenSection.setDate(value);
+               }
+           }
+        }
+    }
+    
     public void setOutline(Outliner myOutline)
     {
         this.myOutline = myOutline;
@@ -341,8 +370,8 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     {
         ArrayList myLabelList = new ArrayList();
         // Construct the level indent text to add to all text in this level
-        String addedText = "-       ";
-        String emptyText = "  ";
+        String addedText = "-  ";
+        String emptyText = "";
             for (int i = 0;i < level;i++)
             {
                 addedText += "      ";
@@ -385,6 +414,21 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 tagsLabel.setBackground(new Color(185, 193, 250));
             }
             myLabelList.add(tagsLabel);
+        }
+        // if date is set display the date
+        String date = "Date:";
+        if (givenSection.getDate() != null)
+        {
+            date += givenSection.getDate();
+            JLabel dateLabel = new JLabel();
+            dateLabel.setOpaque(true);
+            dateLabel.setFont(new Font("Verdana",Font.ITALIC,12));
+            dateLabel.setText(emptyText+date);
+            if (givenSection.isSelected())
+            {
+                dateLabel.setBackground(new Color(185, 193, 250));
+            }
+            myLabelList.add(dateLabel);
         }
         // If the section doesn't have child nodes, only return this section text
         if (givenSection.getContent().size() == 0)
