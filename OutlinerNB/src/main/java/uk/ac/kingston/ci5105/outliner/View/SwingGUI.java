@@ -639,7 +639,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                     if (this.ctrl)
                     {
                         // move the section within it's parent
-                        if (Outliner.getSelected()-1 != -1)
+                        if (Outliner.getSelected() != -1)
                         {
                             Section mySection = Outliner.getAllSections().get(sectionId);
                             if (mySection.getParent() != null)
@@ -668,6 +668,40 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                                             int newID = parentSection.getLocalId(mySection)+1;
                                             parentSection.deleteSubSection(newID-1);
                                             parentSection.setMiddleSectionWithoutCreate(mySection,newID);
+                                            Outliner.setSelected(mySection.getId()+1);
+                                            Outliner.reassignId(this.myOutline);
+                                            this.myOutline.resetSelected();
+                                            this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
+                                            this.typeChar = false;
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (this.myOutline.getSections().size() > 1)
+                                {
+                                    if (e.getKeyCode() == 38)
+                                    {
+                                        if (this.myOutline.getLocalId(mySection) > 0)
+                                        {
+                                            int newID = this.myOutline.getLocalId(mySection)-1;
+                                            this.myOutline.deleteSection(newID+1);
+                                            this.myOutline.setMiddleSectionWithoutCreate(mySection,newID);
+                                            Outliner.setSelected(mySection.getId()-1);
+                                            Outliner.reassignId(this.myOutline);
+                                            this.myOutline.resetSelected();
+                                            this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
+                                            this.typeChar = false;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (this.myOutline.getLocalId(mySection) < this.myOutline.getSections().size()-1)
+                                        {
+                                            int newID = this.myOutline.getLocalId(mySection)+1;
+                                            this.myOutline.deleteSection(newID-1);
+                                            this.myOutline.setMiddleSectionWithoutCreate(mySection,newID);
                                             Outliner.setSelected(mySection.getId()+1);
                                             Outliner.reassignId(this.myOutline);
                                             this.myOutline.resetSelected();
