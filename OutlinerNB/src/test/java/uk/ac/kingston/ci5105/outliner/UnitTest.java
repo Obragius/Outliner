@@ -4,6 +4,13 @@
  */
 package uk.ac.kingston.ci5105.outliner;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.List;
 import junit.framework.TestCase;
 import junit.framework.Assert;
 import uk.ac.kingston.ci5105.outliner.Controller.Outliner;
@@ -32,7 +39,7 @@ public class UnitTest extends TestCase{
     {
         Outliner myOutline = createTopLevelSection();
         Section testSection = myOutline.getSections().get(0);
-        testSection.createSubSection("",null,null,0);
+        testSection.createSubSection("",null,null,0,myOutline);
         Assert.assertTrue(testSection.getContent().get(0) instanceof Section);
     }
     
@@ -67,7 +74,7 @@ public class UnitTest extends TestCase{
     {
         Outliner myOutline = createTopLevelSection();
         Section testSection = myOutline.getSections().get(0);
-        testSection.createSubSection("",null,null,0);
+        testSection.createSubSection("",null,null,0,myOutline);
         Section testSubSection = testSection.getContent().get(0);
         testSubSection.editText("TEST PACKAGE MESSAGE");
         Assert.assertEquals("TEST PACKAGE MESSAGE", testSubSection.getText());
@@ -77,23 +84,39 @@ public class UnitTest extends TestCase{
     {
         Outliner myOutline = createTopLevelSection();
         Section testSection = myOutline.getSections().get(0);
-        testSection.createSubSection("",null,null,0);
+        testSection.createSubSection("",null,null,0,myOutline);
         Section testSubSection = testSection.getContent().get(0);
         testSection.deleteSubSection(testSection.getLocalId(testSubSection));
         Assert.assertFalse(testSection.getContent().contains(testSubSection));
         
     }
     
-    public void testSaveToFile() // Testing that the user can save their progress as a file [R13]
+    public void testSaveToFile() throws IOException, JsonProcessingException, URISyntaxException // Testing that the user can save their progress as a file [R13]
     {
         // will return true if the file has been saved sucesfully
-        Assert.assertTrue(Outliner.saveToFile("TEST_SAVE"));
+        Outliner myOutline = createTopLevelSection();
+        myOutline.setName("TEST_OUTLINE");
+        Outliner.saveToJSON(myOutline);
+        String parentDir = Outliner.class.getProtectionDomain().getCodeSource().getLocation()
+    .toURI().getPath();
+        String fullPath = parentDir+File.separator+".."+File.separator+myOutline.getName()+".json";
+        Assert.assertTrue(new File(fullPath).isFile());
     }
     
-    public void testLoadFromFile() // Testing that the user is able to load saved files and interact with them [R14]
+    public void testLoadFromFile() throws URISyntaxException, IOException // Testing that the user is able to load saved files and interact with them [R14]
     {
         // will return true if the file has been loaded sucesfully
-        Assert.assertTrue(Outliner.loadFromFile("TEST_SAVE"));
+        Outliner myOutline = createTopLevelSection();
+        myOutline.setName("TEST_OUTLINE");
+        Outliner.saveToJSON(myOutline);
+        String parentDir = Outliner.class.getProtectionDomain().getCodeSource().getLocation()
+    .toURI().getPath();
+        ObjectMapper myMapper = new ObjectMapper();
+        List<Outliner> listOutliner = myMapper.readValue(new File(parentDir+File.separator+".."+File.separator+myOutline.getName()+".json"),new TypeReference<List<Outliner>>(){});
+        Outliner myJson = listOutliner.get(0);
+        String newJson = myMapper.writeValueAsString(myJson);
+        String oldJson = myMapper.writeValueAsString(myOutline);
+        Assert.assertEquals(newJson, oldJson);
     }
     
     public void testSearch() // Testing that the user can search text or tag or user assigned tasks [R15]

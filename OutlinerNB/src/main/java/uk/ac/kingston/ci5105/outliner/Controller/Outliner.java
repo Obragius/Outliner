@@ -127,7 +127,6 @@ public class Outliner {
         myList.add(outline);
         String parentDir = Outliner.class.getProtectionDomain().getCodeSource().getLocation()
     .toURI().getPath();
-        System.out.println(parentDir);
         myMapper.writeValue(new File(parentDir+File.separator+".."+File.separator+outline.getName()+".json"),myList);
     }
     
