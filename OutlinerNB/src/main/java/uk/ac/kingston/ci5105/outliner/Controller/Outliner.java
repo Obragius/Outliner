@@ -179,7 +179,7 @@ public class Outliner {
     public static void loadNext() throws JsonProcessingException
     {
         System.out.println("loading next");
-        if (Outliner.ctrlIndex+1 < Outliner.allChanges.size()-1)
+        if (Outliner.ctrlIndex+1 < Outliner.allChanges.size())
         {
             Outliner.ctrlIndex += 1;
         }

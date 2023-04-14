@@ -249,6 +249,12 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
             {
                 addedText += "      ";
             }
+        // If the section is completed add the completed tag on the end of line
+        String completedTag = "";
+        if (givenSection.isComplete())
+        {
+            completedTag = "               | Complete";
+        }
         // If the section doesn't have child nodes, only return this section text
         if (givenSection.getContent().size() == 0)
         {
@@ -265,7 +271,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 {
                     myLabel.hide();
                 }
-                myLabel.setText(addedText+givenSection.getText());
+                myLabel.setText(addedText+givenSection.getText()+completedTag);
                 Integer id = givenSection.getId();
                 myLabel.setName(id.toString());
                 myLabel.addMouseListener(this);
@@ -294,7 +300,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 {
                     //myLabel.hide();
                 }
-                myLabel.setText(addedText+givenSection.getText());
+                myLabel.setText(addedText+givenSection.getText()+completedTag);
                 Integer id = givenSection.getId();
                 myLabel.setName(id.toString());
                 myLabel.addMouseListener(this);
@@ -471,7 +477,21 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                         this.myOutline.resetSelected();
                         this.typeChar = false;
                     }
-                    else
+                    else if (e.getKeyCode() == 67 && this.ctrl)
+                    {
+                        Section mySection = Outliner.getAllSections().get(sectionId);
+                        if (mySection.isComplete())
+                        {
+                            mySection.markComplete(false);
+                        }
+                        else
+                        {
+                            mySection.markComplete(true);
+                        }
+                        System.out.println(mySection.isComplete());
+                        this.changeMade = true;
+                    }
+                    else if (this.ctrl != true)
                     {
                         Section mySection = Outliner.getAllSections().get(sectionId);
                         mySection.addChar(e.getKeyChar(),this.typeIndex);
