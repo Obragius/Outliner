@@ -244,7 +244,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     public ArrayList<JLabel> constructSectionJLabel(Section givenSection, Integer level)
     {
         // Construct the level indent text to add to all text in this level
-        String addedText = "";
+        String addedText = "-";
             for (int i = 0;i < level;i++)
             {
                 addedText += "      ";
