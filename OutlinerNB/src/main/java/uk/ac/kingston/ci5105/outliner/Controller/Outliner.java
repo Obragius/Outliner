@@ -56,13 +56,13 @@ public class Outliner {
     {
         // Create main parent section and make it empty
         Outliner Outline = new Outliner();
-        Outline.createSection("I love dogs",null,null,Outliner.sectionCount);
+        Outline.createSection("I love dogs",null,Outliner.sectionCount);
         Section firstSection = Outline.getSections().get(0);
-        firstSection.createSubSection("I love cute dogs", null, null, Outliner.sectionCount,Outline);
+        firstSection.createSubSection("I love cute dogs", null, Outliner.sectionCount,Outline);
         Section secondSection = firstSection.getContent().get(0);
-        secondSection.createSubSection("Cute dogs are the best", null, null, Outliner.sectionCount,Outline);
-        firstSection.createSubSection("Cute dogs are great", null, null, Outliner.sectionCount,Outline);
-        Outline.createSection("I love cats",null,null,Outliner.sectionCount);
+        secondSection.createSubSection("Cute dogs are the best", null, Outliner.sectionCount,Outline);
+        firstSection.createSubSection("Cute dogs are great", null, Outliner.sectionCount,Outline);
+        Outline.createSection("I love cats",null,Outliner.sectionCount);
         Outline.setName("My outline");
         
         Outliner.saveForCtrlZ(Outline);
@@ -70,21 +70,21 @@ public class Outliner {
         Outliner.myGUI = SwingGUI.main(null,Outline);
     }
     
-    public void createSection(String text,ArrayList<User> user, String[] tag, int priority)
+    public void createSection(String text,ArrayList<User> user, int priority)
     {
         // Create a section using the provided parameters
         // and give it a unqiue runtime id
-        Section newSection = new Section(text, user, tag, priority, new ArrayList(), this.getSectionCount(), 0,null);
+        Section newSection = new Section(text, user, priority, new ArrayList(), this.getSectionCount(), 0,null);
         this.sections.add(newSection);
         Outliner.setSectionCount(1);
         Outliner.reassignId(this);
     }
     
-    public Section createSectionAtId(String text,ArrayList<User> user, String[] tag, int priority, Outliner myOutline)
+    public Section createSectionAtId(String text,ArrayList<User> user, int priority, Outliner myOutline)
     {
         // Create a section using the provided parameters
         // and give it a unqiue runtime id
-        Section newSection = new Section(text, user, tag, priority, new ArrayList(), this.getSectionCount(), 0,null);
+        Section newSection = new Section(text, user, priority, new ArrayList(), this.getSectionCount(), 0,null);
         this.sections.add(newSection);
         int thisSectionId = this.getLocalId(Outliner.getAllSections().get(Outliner.getSelected()));
         int nextSectionId = this.sections.get(thisSectionId+1).getId();
@@ -237,7 +237,7 @@ public class Outliner {
         }
         else
         {
-            this.createSection("", null, null, Outliner.getSectionCount());
+            this.createSection("", null, Outliner.getSectionCount());
             Section newSection = this.getSections().get(this.getSections().size()-1);
             int thisSectionID = this.getLocalId(section);
             this.setMiddleSection(newSection,thisSectionID+1);

@@ -18,7 +18,7 @@ public class Section {
     // This is the user object which is related to this section
     private ArrayList<User> user;
     // This is array of tags which are associated with this section
-    private String[] tag;
+    private ArrayList<String> tag;
     // This is the priority of the section
     private int priority;
     // This arraylist contains all the child sections of this sections
@@ -37,11 +37,11 @@ public class Section {
     @JsonIgnore
     private Section parent;
 
-    public Section(String text, ArrayList<User> user, String[] tag, int priority, ArrayList<Section> content, int id, int level, Section parent)
+    public Section(String text, ArrayList<User> user, int priority, ArrayList<Section> content, int id, int level, Section parent)
     {
         this.text = text;
         this.user = user;
-        this.tag = tag;
+        this.tag = new ArrayList();
         this.priority = priority;
         this.content = content;
         this.id = id;
@@ -56,9 +56,9 @@ public class Section {
         
     }
     
-    public void createSubSection(String text, ArrayList<User> user, String[] tag, int priority, Outliner myOutline)
+    public void createSubSection(String text, ArrayList<User> user, int priority, Outliner myOutline)
     {
-       Section newSection = new Section(text, user, tag, priority, new ArrayList(), Outliner.getSectionCount(),this.level+1,this);
+       Section newSection = new Section(text, user, priority, new ArrayList(), Outliner.getSectionCount(),this.level+1,this);
        this.content.add(newSection);
        Outliner.setSectionCount(1);
        Outliner.reassignId(myOutline);
@@ -67,7 +67,7 @@ public class Section {
     
     public Section createParentSection(Outliner myOutline)
     {
-        this.parent.createSubSection("This is a new section", null, null, Outliner.getSectionCount(),myOutline);
+        this.parent.createSubSection("This is a new section", null, Outliner.getSectionCount(),myOutline);
         Section newSection = this.parent.getContent().get(this.parent.getContent().size()-1);
         int thisSectionID = this.parent.getLocalId(this);
         this.parent.setMiddleSection(newSection,thisSectionID+1);
@@ -87,7 +87,7 @@ public class Section {
         }
         else
         {
-            this.parent.createSubSection("", null, null, Outliner.getSectionCount(),myOutline);
+            this.parent.createSubSection("", null, Outliner.getSectionCount(),myOutline);
             Section newSection = this.parent.getContent().get(this.parent.getContent().size()-1);
             int thisSectionID = this.parent.getLocalId(this);
             newSection.setId(this.getId());
@@ -250,14 +250,27 @@ public class Section {
         this.user = myList;
     }
 
-    public String[] getTag() 
+    public ArrayList<String> getTag() 
     {
         return tag;
     }
 
-    public void setTag(String[] tag) 
+    public void setTag(ArrayList<String> tag) 
     {
         this.tag = tag;
+    }
+    
+    public void addTag(String value)
+    {
+        this.tag.add(value);
+    }
+    
+    public void deleteTag(String value)
+    {
+        if (this.tag.contains(value))
+        {
+            this.tag.remove(value);
+        }
     }
 
     public int getPriority() 

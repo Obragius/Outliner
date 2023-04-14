@@ -115,6 +115,8 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        JMenuItem saveItem = new JMenuItem("Save File");
        JMenuItem newItem = new JMenuItem("New Outline");
        JMenuItem userEdit = new JMenuItem("User Edit");
+       JMenuItem addTag = new JMenuItem("Add Tag");
+       JMenuItem removeTag = new JMenuItem("Remove Tag");
        ActionListener controlLoadItem = new ActionListener() { 
            @Override
            public void actionPerformed(ActionEvent e) {
@@ -152,15 +154,33 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                addUserEvent();
            }
        };
+       
+       ActionListener controlAddTag = new ActionListener() { 
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               addTagEvent();
+           }
+       };
+       
+       ActionListener controlRemoveTag = new ActionListener() { 
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               removeTagEvent();
+           }
+       };
        loadItem.addActionListener(controlLoadItem);
        saveItem.addActionListener(controlSaveItem);
        newItem.addActionListener(controlNewItem);
        userEdit.addActionListener(controlEditUser);
+       addTag.addActionListener(controlAddTag);
+       removeTag.addActionListener(controlRemoveTag);
        
        fileMenu.add(loadItem);
        fileMenu.add(saveItem);
        fileMenu.add(newItem);
        sectionMenu.add(userEdit);
+       sectionMenu.add(addTag);
+       sectionMenu.add(removeTag);
        this.myFrame.setJMenuBar(menuBar);
        
        // Call method to generate all the labels
@@ -232,6 +252,32 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         }
     }
     
+    public void addTagEvent()
+    {
+        String value = JOptionPane.showInputDialog(this.myFrame,"Enter new tag","");
+        if (value != null && value != "")
+        {
+           if (Outliner.getSelected() != -1)
+           {
+               Section givenSection = Outliner.getAllSections().get(Outliner.getSelected());
+               givenSection.addTag(value);
+           }
+        }
+    }
+    
+    public void removeTagEvent()
+    {
+        String value = JOptionPane.showInputDialog(this.myFrame,"Enter new tag","");
+        if (value != null && value != "")
+        {
+           if (Outliner.getSelected() != -1)
+           {
+               Section givenSection = Outliner.getAllSections().get(Outliner.getSelected());
+               givenSection.deleteTag(value);
+           }
+        }
+    }
+    
     public void setOutline(Outliner myOutline)
     {
         this.myOutline = myOutline;
@@ -295,7 +341,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     {
         ArrayList myLabelList = new ArrayList();
         // Construct the level indent text to add to all text in this level
-        String addedText = "-";
+        String addedText = "-       ";
         String emptyText = "  ";
             for (int i = 0;i < level;i++)
             {
@@ -321,6 +367,24 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 userLabel.setBackground(new Color(185, 193, 250));
             }
             myLabelList.add(userLabel);
+        }
+        // If any other tags present
+        if (givenSection.getTag().isEmpty() != true)
+        {
+            String manyTags = "Tags = ";
+            for (int i = 0; i < givenSection.getTag().size();i++)
+            {
+                manyTags += "["+givenSection.getTag().get(i)+"]";
+            }
+            JLabel tagsLabel = new JLabel();
+            tagsLabel.setOpaque(true);
+            tagsLabel.setFont(new Font("Verdana",Font.ITALIC,12));
+            tagsLabel.setText(emptyText+manyTags);
+            if (givenSection.isSelected())
+            {
+                tagsLabel.setBackground(new Color(185, 193, 250));
+            }
+            myLabelList.add(tagsLabel);
         }
         // If the section doesn't have child nodes, only return this section text
         if (givenSection.getContent().size() == 0)
@@ -481,7 +545,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         if (e.getKeyCode() == 10 && Outliner.getSelected() == -1)
         {
             System.out.println(Outliner.getSelected());
-            this.myOutline.createSection("This is a new section", null, null, Outliner.getSectionCount());
+            this.myOutline.createSection("", null, Outliner.getSectionCount());
             Section newSection = this.myOutline.getSections().get(this.myOutline.getSections().size()-1);
             this.myOutline.setLeadingSection(this.myOutline.getSections().size()-1);
             newSection.setId(Outliner.getSelected()+1);
@@ -678,7 +742,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                     }
                     else
                     {
-                        addedSection = this.myOutline.createSectionAtId("This is a new section", null, null, Outliner.getSectionCount(),this.myOutline);
+                        addedSection = this.myOutline.createSectionAtId("", null, Outliner.getSectionCount(),this.myOutline);
                     }
                     Outliner.setSelected(addedSection.getId());
                     this.myOutline.resetSelected();
