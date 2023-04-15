@@ -149,6 +149,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        JMenuItem loadItem = new JMenuItem("Load File");
        JMenuItem saveItem = new JMenuItem("Save File");
        JMenuItem newItem = new JMenuItem("New Outline");
+       JMenuItem renameItem = new JMenuItem("Rename File");
        JMenuItem userEdit = new JMenuItem("User Edit");
        JMenuItem addTag = new JMenuItem("Add Tag");
        JMenuItem removeTag = new JMenuItem("Remove Tag");
@@ -214,6 +215,12 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                findTextEvent();
            }
        };
+       ActionListener controlRenameItem = new ActionListener() { 
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               renameItemEvent();
+           }
+       };
        loadItem.addActionListener(controlLoadItem);
        saveItem.addActionListener(controlSaveItem);
        newItem.addActionListener(controlNewItem);
@@ -222,10 +229,12 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        removeTag.addActionListener(controlRemoveTag);
        editDate.addActionListener(controlEditDate);
        findText.addActionListener(controlFindText);
+       renameItem.addActionListener(controlRenameItem);
        
        fileMenu.add(loadItem);
        fileMenu.add(saveItem);
        fileMenu.add(newItem);
+       fileMenu.add(renameItem);
        fileMenu.add(findText);
        sectionMenu.add(userEdit);
        sectionMenu.add(addTag);
@@ -389,6 +398,25 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
                 this.typeChar = false;
                 this.myOutline.resetSelected();
+            }
+        }
+    }
+    
+    /**
+    * This a menu bar method to rename the outline
+    */
+    public void renameItemEvent()
+    {
+        String value = JOptionPane.showInputDialog(this.myFrame,"Enter new name","");
+        if (value != null && value != "")
+        {
+            this.myOutline.setName(value);
+            try {
+                this.saveItemEvent();
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -775,7 +803,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                     this.ctrl = true;
                 }
                 // For all characters which can be appended to the text
-                if (e.getKeyCode() > 40 && e.getKeyCode() < 144 || e.getKeyCode() == 32)
+                if (e.getKeyCode() > 40 && e.getKeyCode() < 144 || e.getKeyCode() == 32 || e.getKeyCode() == 222)
                 {
                     if (e.getKeyCode() == 83 && this.ctrl)
                     {
