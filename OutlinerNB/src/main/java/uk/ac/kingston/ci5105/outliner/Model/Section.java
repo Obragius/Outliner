@@ -8,8 +8,11 @@ import java.util.ArrayList;
 import uk.ac.kingston.ci5105.outliner.Controller.Outliner;
 
 /**
- *
- * @author lolki
+ * This is a Controller Class which is used to control the application as well 
+ * as being instanciated to provide the top level container for the section
+ * items
+ * <p> This class statically stores currently loaded 
+ * @author k1801606
  */
 public class Section {
     
@@ -69,7 +72,7 @@ public class Section {
     
     public Section createParentSection(Outliner myOutline)
     {
-        this.parent.createSubSection("This is a new section", null, Outliner.getSectionCount(),myOutline);
+        this.parent.createSubSection("", null, Outliner.getSectionCount(),myOutline);
         Section newSection = this.parent.getContent().get(this.parent.getContent().size()-1);
         int thisSectionID = this.parent.getLocalId(this);
         this.parent.setMiddleSection(newSection,thisSectionID+1);

@@ -300,12 +300,14 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     public void reDrawScreen()
     {
        // make sure to remove all existing labels
-        int position = 0;
+        int positionY = 0;
+        int positionX = 0;
         if (this.myPanel != null)
         {
             if (Outliner.getSelected() != -1)
             {
-                position = this.myScrollPane.getVerticalScrollBar().getValue();
+                positionY = this.myScrollPane.getVerticalScrollBar().getValue();
+                positionX = this.myScrollPane.getHorizontalScrollBar().getValue();
             }
             this.myPanel.removeAll();
         }
@@ -327,7 +329,8 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        this.myScrollPane = new JScrollPane(this.myPanel);
        this.myScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
        this.myFrame.setContentPane(this.myScrollPane);
-       this.myScrollPane.getVerticalScrollBar().setValue(position);
+       this.myScrollPane.getVerticalScrollBar().setValue(positionY);
+       this.myScrollPane.getHorizontalScrollBar().setValue(positionX);
        
        this.myFrame.setVisible(true);
     }
@@ -578,11 +581,22 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
             Section newSection = this.myOutline.getSections().get(this.myOutline.getSections().size()-1);
             this.myOutline.setLeadingSection(this.myOutline.getSections().size()-1);
             newSection.setId(Outliner.getSelected()+1);
+            Outliner.setSelected(0);
+            this.myOutline.resetSelected();
             Outliner.reassignId(this.myOutline);
             try {
                 Outliner.saveForCtrlZ(this.myOutline);
             } catch (JsonProcessingException ex) {
                 Logger.getLogger(SwingGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        // Select the first element
+        if (e.getKeyCode() == 40 && Outliner.getSelected() == -1)
+        {
+            if (Outliner.getAllSections().isEmpty() == false)
+            {
+                Outliner.setSelected(0);
+                this.myOutline.resetSelected();
             }
         }
     }

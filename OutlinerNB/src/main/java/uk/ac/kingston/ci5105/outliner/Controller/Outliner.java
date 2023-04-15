@@ -16,42 +16,106 @@ import java.util.List;
 
 
 /**
- *
- * @author lolki
+ * This is a Controller Class which is used to control the application as well 
+ * as being instantiated to provide the top level container for the section
+ * items
+ * <p> This class statically stores currently loaded GUI object as well as
+ * statically stores Sections which are present in the Outline </p>
+ * <p> The object of the Outline is stored in the GUI to be changed and mimics
+ * behaviour of a Section object. It is not statical to make it easier to 
+ * convert to JSON to store and reload </p>
+ * @author k1801606
  */
 public class Outliner {
     
     // Name of the outline object, this will be used as the default for saving
+    /**
+    * The name of the outline used to save and load files with outline
+    */
     private String name;
     // This should be the date the object has been modified
+    /**
+    * The date the object has been modified (Not in use)
+     */
     private String date;
     // This contains Array of top level sections, which follow
     // hyrearchi and contain child sub-sections
+    /**
+    * ArrayList of top-level sections. These sections don't have parent objects
+    */
     private ArrayList<Section> sections = new ArrayList();
     // This does not follow the hierachi and presents all 
     // sections as they dispay in the GUI
+    /**
+     * Static ArrayList which stores all the sections present in the outline
+     * sequently, used to target sections using their id which corresponds
+     * to their index within this ArrayList
+     */
     private static ArrayList<Section> allSections = new ArrayList();
     // Keeps track of the number of sections in the outline
+    /**
+    * Statically stores the number of sections present in the loaded outline
+    * Is updated when a new Outline is loaded
+    */
     private static int sectionCount = 0;
     // Keeps track of the selected sections, so that it can be modified
+    /**
+    * Statically stores the id of the Section currently selected by the user
+    * using the GUI. -1 means that no Section is selected, other integers
+    * represent index inside allSections ArrayList
+    */
     private static int sectionSelected = -1;
     // This will store JSON objects to allow to come back to previous state of the program
+    /**
+    * Statically stores JSON strings to allow to move back and forth between
+    * different states of the Outline. Stores up to 100 JSON strings, then 
+    * pops index 0 and appends last change on the end
+    */
     private static ArrayList<String> allChanges = new ArrayList();
     // This will tell if the changes need to be save or if the ctrl z and ctrl x are used
+    /**
+    * True if the user is using Ctrl Key to navigate allChanges ArrayList
+    */
     private static boolean ctrlEvent;
     // This will keep track of the ctrl z index
+    /**
+    * Stores the current index of the state loaded from the allChanges ArrayList
+    */
     private static int ctrlIndex;
     // This will help reassign all id's
+    /**
+    * Static counter used by two static methods of reassignId and gatherSections
+    * is used for easy of access between the two methods
+    */
     private static int idCount;
     //This will store the gui object which is reponsible for all displays
+    /**
+    * Statically stores the GUI object currently used to display the Outline to the user
+    */
     private static SwingGUI myGUI;
     
     
+    /**
+    * Main method which is used to run the application
+    * It calls the onStartUp method
+    * @author k1801606
+    * @param args Arguments given to the application
+     * @throws com.fasterxml.jackson.core.JsonProcessingException
+     * @throws java.net.URISyntaxException
+    */
     public static void main(String[] args) throws JsonProcessingException, URISyntaxException, IOException
     {
         Outliner.onStartUp();
     }
     
+    /**
+    * This method will start the application, create a new Outliner object
+    * Load the first state to the allCghanges list
+    * And load the GUI which will display the outline to static myGUI attribute
+    * @author k1801606
+     * @throws com.fasterxml.jackson.core.JsonProcessingException
+     * @throws java.net.URISyntaxException
+    */
     public static void onStartUp() throws JsonProcessingException, IOException, URISyntaxException
     {
         // Create main parent section and make it empty
@@ -62,24 +126,41 @@ public class Outliner {
         Outliner.myGUI = SwingGUI.main(null,Outline);
     }
     
+    /**
+    * Simple create section method which creates a top level section and appends
+    * it to the end of sections list
+    * @author k1801606
+    * @param text Text value to be stored in the section and displayed to the user
+    * @param user List of users to be assigned to the Section , can be null
+    * @param priority Can show the priority of the section (Unused)
+    */
     public void createSection(String text,ArrayList<User> user, int priority)
     {
         // Create a section using the provided parameters
         // and give it a unqiue runtime id
-        Section newSection = new Section(text, user, priority, new ArrayList(), this.getSectionCount(), 0,null);
+        Section newSection = new Section(text, user, priority, new ArrayList(), Outliner.getSectionCount(), 0,null);
         this.sections.add(newSection);
         Outliner.setSectionCount(1);
         Outliner.reassignId(this);
     }
     
+    /**
+    * Method to create a new section at the top level of the Outline and move it
+    * to a certain id provided
+    * @author k1801606
+    * @param text Text value to be stored in the section and displayed to the user
+    * @param user List of users to be assigned to the Section , can be null
+    * @param priority Can show the priority of the section (Unused)
+    * @param myOutline Currently loaded outline object
+    * @return Section object which have been created to select it in the GUI
+    */
     public Section createSectionAtId(String text,ArrayList<User> user, int priority, Outliner myOutline)
     {
         // Create a section using the provided parameters
         // and give it a unqiue runtime id
-        Section newSection = new Section(text, user, priority, new ArrayList(), this.getSectionCount(), 0,null);
+        Section newSection = new Section(text, user, priority, new ArrayList(), Outliner.getSectionCount(), 0,null);
         this.sections.add(newSection);
         int thisSectionId = this.getLocalId(Outliner.getAllSections().get(Outliner.getSelected()));
-        int nextSectionId = this.sections.get(thisSectionId+1).getId();
         newSection.setId(this.sections.get(thisSectionId+1).getId());
         this.setMiddleSection(newSection, thisSectionId+1);
         Outliner.setSectionCount(1);
@@ -87,12 +168,22 @@ public class Outliner {
         return newSection;
     }
     
-    // Delete a top level section from the Outline object
+    /**
+    * Method to remove a section from the top level of the outline given its ID
+    * @author k1801606
+    * @param sectionID Id of the section to be deleted
+    */
     public void deleteSection(int sectionID)
     {
         this.sections.remove(sectionID);
     }
     
+    /**
+    * Method to remove a top-level section and make sure all child Sections are
+    * moved to the top-level
+    * @author k1801606
+    * @param sectionID Id of the section to be deleted
+    */
     public void deleteTopLevelSection(int sectionID)
     {
          // Before deleting a section at the top level, move all children nodes to the top level
@@ -112,6 +203,14 @@ public class Outliner {
     }
     
     // This will be used to create a json version of this object and save them
+    /**
+    * Method to save the current Outline to a file located in the target folder
+    * of the project.The name of the JSON file will match the name of the Outline
+    * @author k1801606
+    * @param outline Outliner to be saved in the file of .json format
+     * @throws com.fasterxml.jackson.core.JsonProcessingException
+     * @throws java.net.URISyntaxException
+    */
     public static void saveToJSON(Outliner outline) throws JsonProcessingException, URISyntaxException, IOException
     {
         ObjectMapper myMapper = new ObjectMapper();
@@ -122,12 +221,27 @@ public class Outliner {
         myMapper.writeValue(new File(parentDir+File.separator+".."+File.separator+outline.getName()+".json"),myList);
     }
     
+    /**
+    * Method to set ctrlEvent which is used to prevent saving changes when user
+    * is using Ctrl+z or Ctrl+x
+    * @author k1801606
+    * @param value true or false to set the boolean attribute
+    */
     public static void setCtrlEvent(boolean value)
     {
         Outliner.ctrlEvent = value;
     }
     
     // This method will save the last 25 states of the outline to allow to go back
+    /**
+    * Method used to populate allChanges list with JSON strings using the 
+    * current outline state, to be able to come back to that state at a later 
+    * time
+    * The JSON file always contains a list of length 1
+    * @author k1801606
+    * @param outline Outliner object to be saved
+     * @throws com.fasterxml.jackson.core.JsonProcessingException
+    */
     public static void saveForCtrlZ(Outliner outline) throws JsonProcessingException
     {
         if (Outliner.ctrlEvent == false)
@@ -142,7 +256,6 @@ public class Outliner {
                     newChanges.add(Outliner.allChanges.get(i));
                 }
                 newChanges.add(myJson);
-                System.out.println("New change saved");
                 Outliner.allChanges = newChanges;
             }
             else
@@ -157,9 +270,14 @@ public class Outliner {
         }
     }   
     
+    /**
+    * Method to load a previous state of the outline from allChanges list using
+    * ctrlIndex attribute of the class
+    * @author k1801606
+     * @throws com.fasterxml.jackson.core.JsonProcessingException
+    */
     public static void loadPrevious() throws JsonProcessingException
     {
-        System.out.println("loading previous");
         if (Outliner.ctrlIndex != 0)
         {
             Outliner.ctrlIndex -= 1;
@@ -168,9 +286,14 @@ public class Outliner {
         
     }
     
+    /**
+    * Method to load a next state of the outline from allChanges list using
+    * ctrlIndex attribute of the class
+    * @author k1801606
+     * @throws com.fasterxml.jackson.core.JsonProcessingException
+    */
     public static void loadNext() throws JsonProcessingException
     {
-        System.out.println("loading next");
         if (Outliner.ctrlIndex+1 < Outliner.allChanges.size())
         {
             Outliner.ctrlIndex += 1;
@@ -179,12 +302,26 @@ public class Outliner {
     }
     
     
-    
+    /**
+    * Method that returns a JSON based on the provided index
+    * @author k1801606
+     * @param id The index of the JSON in allChanges list
+     * @return String of the JSON at that index
+    */
     public static String getJSON(int id)
     {
         return Outliner.allChanges.get(id);
     }
     
+    /**
+    * Method to load an Outliner object stored in the target folder of the
+    * project with a matching name to the provided String     
+    * The JSON file always contains a list of length 1
+    * @author k1801606
+     * @param outlineName The name of file JSON is stored in
+     * @throws java.io.IOException
+     * @throws java.net.URISyntaxException
+    */
     public static void loadJsonFromFile(String outlineName) throws IOException, URISyntaxException
     {
         ObjectMapper myMapper = new ObjectMapper();
@@ -198,6 +335,13 @@ public class Outliner {
     }
     
     //This will be used to reaload json into the new object
+    /**
+    * Method to load an Outliner object from a JSON given.Is used for implementation
+    * of previous and next state load calls
+    * @author k1801606
+     * @param givenJson JSON String containing the Outliner object to load
+     * @throws com.fasterxml.jackson.core.JsonProcessingException
+    */
     public static void loadJsonToOutline(String givenJson) throws JsonProcessingException
     {
         ObjectMapper myMapper = new ObjectMapper();
@@ -207,6 +351,14 @@ public class Outliner {
         Outliner.myGUI.setOutline(myOutline);
     }
     
+    /**
+    * Method to move a section from a second level to the top-level of the Outliner
+    * This method is called when no Sections are deleted
+    * @author k1801606
+     * @param section The Section to be moved to the top-level
+     * @param myOutline The outline Object to move it in, used for reassignId
+     * @return Section that has been moved
+    */
     public Section moveSectionToTop(Section section, Outliner myOutline)
     {
         this.setMiddleSectionWithoutCreate(section, this.getLocalId(section.getParent())+1);
@@ -216,6 +368,16 @@ public class Outliner {
         return section;
     }
     
+    /**
+    * Method to move a section from a top-level to the second level of the Outliner
+    * This method is called when no Sections are deleted
+    * If there are no sections to set as parent new Hidden section is created
+    * to act as an invisible container
+    * @author k1801606
+     * @param section The Section to be moved to the second level
+     * @param myOutline The outline Object to move it in, used for reassignId
+     * @return Section that has been moved
+    */
     public Section moveSectionToBottom(Section section, Outliner myOutline)
     {
         if (this.getLocalId(section)-1 != -1)
@@ -244,6 +406,12 @@ public class Outliner {
         return section;
     }
     
+    /**
+    * Method to return the ID of the given section within Outline.sections list
+    * @author k1801606
+     * @param givenSection Section which local id is required
+     * @return int id of the given section within the outline object
+    */
     public int getLocalId(Section givenSection)
     {
         return this.sections.indexOf(givenSection);
