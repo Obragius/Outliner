@@ -366,11 +366,19 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         }
     }
     
+    /**
+    * Setter for the outline
+     * @param myOutline to set
+    */
     public void setOutline(Outliner myOutline)
     {
         this.myOutline = myOutline;
     }
     
+    /**
+    * Draw method for the GUI, gathers all the labels and add them to a scroll pane
+    * which is then passed to the frame
+    */
     public void reDrawScreen()
     {
        // make sure to remove all existing labels
@@ -409,6 +417,10 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        this.myFrame.setVisible(true);
     }
     
+    /**
+    * method to gather all JLabels
+     * @return A list of JLabels found
+    */
     public ArrayList<JLabel> constructJLabel()
     {
         // If the outline is empty return nothing
@@ -428,6 +440,12 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         }
     }
     
+    /**
+    * Recursive method to gather all labels to represent the Outline
+     * @param givenSection for which to construct JLabels
+     * @param level of the Section to control indent
+     * @return A list of JLabels found
+    */
     public ArrayList<JLabel> constructSectionJLabel(Section givenSection, Integer level)
     {
         ArrayList myLabelList = new ArrayList();
@@ -546,6 +564,9 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         }
     }
 
+    /**
+    * Overriden method to allow to select a section with a mouse
+    */
     @Override
     public void mouseClicked(MouseEvent e) {
         // Code to select a section so that it can be edited
@@ -562,18 +583,30 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         reDrawScreen();
     }
 
+    /**
+    * Overriden method empty
+    */
     @Override
     public void mousePressed(MouseEvent e) {
     }
 
+    /**
+    * Overriden method empty
+    */
     @Override
     public void mouseReleased(MouseEvent e) {
     }
 
+    /**
+    * Overriden method empty
+    */
     @Override
     public void mouseEntered(MouseEvent e) {
     }
 
+    /**
+    * Overriden method empty
+    */
     @Override
     public void mouseExited(MouseEvent e) {
     }
@@ -688,6 +721,14 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         }
     }
     
+    /**
+    * Method which reacts to all key-presses of the application ,it checks all
+    * flags and acts accordingly
+     * @param e KeyEvent containing the relevant key code
+     * @param keyDetector The type of method called it key down or key up
+     * @throws com.fasterxml.jackson.core.JsonProcessingException JSON exception
+     * @throws java.net.URISyntaxException indicate that a string could not be parsed as a URI reference
+    */
     public void keyHandler(KeyEvent e, int keyDetector) throws JsonProcessingException, IOException, URISyntaxException
     {
         this.typingSpace.stop();
@@ -1005,7 +1046,9 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     }
     
     
-    
+    /**
+    * Method called by the timer to type or remove the typing character
+    */
     public void keyTyper()
     {
         int sectionId = Outliner.getSelected();
@@ -1032,6 +1075,9 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         }
     }
     
+    /**
+    * Method called by keyTyper to remove the typing character
+    */
     public void keyTyperRemover()
     {
         int sectionId = Outliner.getSelected();
