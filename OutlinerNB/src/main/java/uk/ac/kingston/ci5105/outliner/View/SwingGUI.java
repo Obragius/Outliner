@@ -123,7 +123,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        // Basic setup for the frame
        this.myFrame = new JFrame();
        this.myFrame.setTitle("Outliner");
-       this.myFrame.setSize(600,1200);
+       this.myFrame.setSize(600,900);
        this.myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        
        
@@ -263,6 +263,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                Outliner.loadJsonFromFile(value);
                reDrawScreen();
                Outliner.setSelected(-1);
+               Outliner.saveForCtrlZ(this.myOutline);
                this.myOutline.resetSelected();
                this.typeChar = false;
             } catch (IOException ex) 
@@ -866,8 +867,8 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                                             int newID = parentSection.getLocalId(mySection)-1;
                                             parentSection.deleteSubSection(newID+1);
                                             parentSection.setMiddleSectionWithoutCreate(mySection,newID);
-                                            Outliner.setSelected(mySection.getId()-1);
                                             Outliner.reassignId(this.myOutline);
+                                            Outliner.setSelected(mySection.getId());
                                             this.myOutline.resetSelected();
                                             this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
                                             this.typeChar = false;
@@ -880,8 +881,8 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                                             int newID = parentSection.getLocalId(mySection)+1;
                                             parentSection.deleteSubSection(newID-1);
                                             parentSection.setMiddleSectionWithoutCreate(mySection,newID);
-                                            Outliner.setSelected(mySection.getId()+1);
                                             Outliner.reassignId(this.myOutline);
+                                            Outliner.setSelected(mySection.getId());
                                             this.myOutline.resetSelected();
                                             this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
                                             this.typeChar = false;
@@ -900,8 +901,8 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                                             int newID = this.myOutline.getLocalId(mySection)-1;
                                             this.myOutline.deleteSection(newID+1);
                                             this.myOutline.setMiddleSectionWithoutCreate(mySection,newID);
-                                            Outliner.setSelected(mySection.getId()-1);
                                             Outliner.reassignId(this.myOutline);
+                                            Outliner.setSelected(mySection.getId());
                                             this.myOutline.resetSelected();
                                             this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
                                             this.typeChar = false;
@@ -914,8 +915,8 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                                             int newID = this.myOutline.getLocalId(mySection)+1;
                                             this.myOutline.deleteSection(newID-1);
                                             this.myOutline.setMiddleSectionWithoutCreate(mySection,newID);
-                                            Outliner.setSelected(mySection.getId()+1);
                                             Outliner.reassignId(this.myOutline);
+                                            Outliner.setSelected(mySection.getId());
                                             this.myOutline.resetSelected();
                                             this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
                                             this.typeChar = false;
@@ -1064,7 +1065,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                     {
                        Outliner.setSectionCount(-1);
                        Outliner.deleteAtId(givenSection.getId());
-                       this.myOutline.deleteTopLevelSection(givenSection.getId());
+                       this.myOutline.deleteTopLevelSection(this.myOutline.getLocalId(givenSection));
                        Outliner.setSelected(-1);
                        this.myOutline.resetSelected();
                     }
