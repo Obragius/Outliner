@@ -98,10 +98,9 @@ public class Outliner {
     /**
     * Main method which is used to run the application
     * It calls the onStartUp method
-    * @author k1801606
     * @param args Arguments given to the application
-     * @throws com.fasterxml.jackson.core.JsonProcessingException
-     * @throws java.net.URISyntaxException
+     * @throws com.fasterxml.jackson.core.JsonProcessingException JSON exception
+     * @throws java.net.URISyntaxException indicate that a string could not be parsed as a URI reference
     */
     public static void main(String[] args) throws JsonProcessingException, URISyntaxException, IOException
     {
@@ -112,9 +111,8 @@ public class Outliner {
     * This method will start the application, create a new Outliner object
     * Load the first state to the allCghanges list
     * And load the GUI which will display the outline to static myGUI attribute
-    * @author k1801606
-     * @throws com.fasterxml.jackson.core.JsonProcessingException
-     * @throws java.net.URISyntaxException
+     * @throws com.fasterxml.jackson.core.JsonProcessingException JSON exception
+     * @throws java.net.URISyntaxException indicate that a string could not be parsed as a URI reference
     */
     public static void onStartUp() throws JsonProcessingException, IOException, URISyntaxException
     {
@@ -127,9 +125,16 @@ public class Outliner {
     }
     
     /**
+    * Simple empty constructor
+    */
+    public Outliner()
+    {
+        
+    }
+    
+    /**
     * Simple create section method which creates a top level section and appends
     * it to the end of sections list
-    * @author k1801606
     * @param text Text value to be stored in the section and displayed to the user
     * @param user List of users to be assigned to the Section , can be null
     * @param priority Can show the priority of the section (Unused)
@@ -147,7 +152,6 @@ public class Outliner {
     /**
     * Method to create a new section at the top level of the Outline and move it
     * to a certain id provided
-    * @author k1801606
     * @param text Text value to be stored in the section and displayed to the user
     * @param user List of users to be assigned to the Section , can be null
     * @param priority Can show the priority of the section (Unused)
@@ -170,7 +174,6 @@ public class Outliner {
     
     /**
     * Method to remove a section from the top level of the outline given its ID
-    * @author k1801606
     * @param sectionID Id of the section to be deleted
     */
     public void deleteSection(int sectionID)
@@ -181,7 +184,6 @@ public class Outliner {
     /**
     * Method to remove a top-level section and make sure all child Sections are
     * moved to the top-level
-    * @author k1801606
     * @param sectionID Id of the section to be deleted
     */
     public void deleteTopLevelSection(int sectionID)
@@ -206,10 +208,9 @@ public class Outliner {
     /**
     * Method to save the current Outline to a file located in the target folder
     * of the project.The name of the JSON file will match the name of the Outline
-    * @author k1801606
     * @param outline Outliner to be saved in the file of .json format
-     * @throws com.fasterxml.jackson.core.JsonProcessingException
-     * @throws java.net.URISyntaxException
+     * @throws com.fasterxml.jackson.core.JsonProcessingException JSON exception
+     * @throws java.net.URISyntaxException indicate that a string could not be parsed as a URI reference
     */
     public static void saveToJSON(Outliner outline) throws JsonProcessingException, URISyntaxException, IOException
     {
@@ -224,7 +225,6 @@ public class Outliner {
     /**
     * Method to set ctrlEvent which is used to prevent saving changes when user
     * is using Ctrl+z or Ctrl+x
-    * @author k1801606
     * @param value true or false to set the boolean attribute
     */
     public static void setCtrlEvent(boolean value)
@@ -238,9 +238,8 @@ public class Outliner {
     * current outline state, to be able to come back to that state at a later 
     * time
     * The JSON file always contains a list of length 1
-    * @author k1801606
     * @param outline Outliner object to be saved
-     * @throws com.fasterxml.jackson.core.JsonProcessingException
+     * @throws com.fasterxml.jackson.core.JsonProcessingException JSON exception
     */
     public static void saveForCtrlZ(Outliner outline) throws JsonProcessingException
     {
@@ -273,8 +272,7 @@ public class Outliner {
     /**
     * Method to load a previous state of the outline from allChanges list using
     * ctrlIndex attribute of the class
-    * @author k1801606
-     * @throws com.fasterxml.jackson.core.JsonProcessingException
+     * @throws com.fasterxml.jackson.core.JsonProcessingException JSON exception
     */
     public static void loadPrevious() throws JsonProcessingException
     {
@@ -289,8 +287,7 @@ public class Outliner {
     /**
     * Method to load a next state of the outline from allChanges list using
     * ctrlIndex attribute of the class
-    * @author k1801606
-     * @throws com.fasterxml.jackson.core.JsonProcessingException
+     * @throws com.fasterxml.jackson.core.JsonProcessingException JSON exception
     */
     public static void loadNext() throws JsonProcessingException
     {
@@ -304,7 +301,6 @@ public class Outliner {
     
     /**
     * Method that returns a JSON based on the provided index
-    * @author k1801606
      * @param id The index of the JSON in allChanges list
      * @return String of the JSON at that index
     */
@@ -317,10 +313,9 @@ public class Outliner {
     * Method to load an Outliner object stored in the target folder of the
     * project with a matching name to the provided String     
     * The JSON file always contains a list of length 1
-    * @author k1801606
      * @param outlineName The name of file JSON is stored in
-     * @throws java.io.IOException
-     * @throws java.net.URISyntaxException
+     * @throws java.io.IOException File in file system exception
+     * @throws java.net.URISyntaxException indicate that a string could not be parsed as a URI reference
     */
     public static void loadJsonFromFile(String outlineName) throws IOException, URISyntaxException
     {
@@ -338,9 +333,8 @@ public class Outliner {
     /**
     * Method to load an Outliner object from a JSON given.Is used for implementation
     * of previous and next state load calls
-    * @author k1801606
      * @param givenJson JSON String containing the Outliner object to load
-     * @throws com.fasterxml.jackson.core.JsonProcessingException
+     * @throws com.fasterxml.jackson.core.JsonProcessingException JSON exception
     */
     public static void loadJsonToOutline(String givenJson) throws JsonProcessingException
     {
@@ -354,7 +348,6 @@ public class Outliner {
     /**
     * Method to move a section from a second level to the top-level of the Outliner
     * This method is called when no Sections are deleted
-    * @author k1801606
      * @param section The Section to be moved to the top-level
      * @param myOutline The outline Object to move it in, used for reassignId
      * @return Section that has been moved
@@ -373,7 +366,6 @@ public class Outliner {
     * This method is called when no Sections are deleted
     * If there are no sections to set as parent new Hidden section is created
     * to act as an invisible container
-    * @author k1801606
      * @param section The Section to be moved to the second level
      * @param myOutline The outline Object to move it in, used for reassignId
      * @return Section that has been moved
@@ -408,7 +400,6 @@ public class Outliner {
     
     /**
     * Method to return the ID of the given section within Outline.sections list
-    * @author k1801606
      * @param givenSection Section which local id is required
      * @return int id of the given section within the outline object
     */
@@ -417,43 +408,76 @@ public class Outliner {
         return this.sections.indexOf(givenSection);
     }
     
+    /**
+    * Method to reset the count of the Sections present in the Outline is used 
+    * when a new outline is loaded from a file or JSON
+     * @param count The integer value to be set
+    */
     public static void setSectionCountImidiate(int count)
     {
         Outliner.sectionCount = count;
     }
 
+    /**
+    * Getter for name attribute
+     * @return String name
+    */
     public String getName() 
     {
         return this.name;
     }
 
+    /**
+    * Setter for name attribute
+     * @param name New name to set to
+    */
     public void setName(String name) 
     {
         this.name = name;
     }
 
+    /**
+    * Getter for date attribute
+     * @return String date
+    */
     public String getDate() 
     {
         return this.date;
     }
 
+    /**
+    * Setter for date attribute
+     * @param date New date to set to
+    */
     public void setDate(String date) 
     {
         this.date = date;
     }
    
+    /**
+    * Setter for sectionSelected attribute
+     * @param id New int to set to
+    */
     // Sets the id of sections which is currently selected
     public static void setSelected(int id)
     {
         Outliner.sectionSelected = id;
     }
     
+    /**
+    * Getter for sectionSelected attribute
+     * @return integer for the id of the selected section
+    */
     public static int getSelected()
     {
         return Outliner.sectionSelected;
     }
     
     // Changes the selected state boolean within the sections object
+    /**
+    * Goes through each section un-selecting it, and selects a new section if 
+    * it id matches the sectionSelected attribute value
+    */
     public void resetSelected()
     {
        for (int i = 0; i < Outliner.sectionCount; i++)
@@ -470,6 +494,12 @@ public class Outliner {
     }
     
     // new reasign id method 
+    /**
+    * Method used to reassign id values and reset parent relationship to all
+    * sections, called all the time something changes in the model regarding
+    * sections in top-level and lower levels
+     * @param myOutline The outline object to reassign id for
+    */
     public static void reassignId(Outliner myOutline)
     {
         Outliner.idCount = 0;
@@ -486,10 +516,16 @@ public class Outliner {
     }
     
     // This method will also set parent sections correctly
+    /**
+    * Support method using recursion to gather all child sections and assign 
+    * correct id and parent to them based on this outline
+     * @param givenSection The section for which to gather all child nodes
+     * @return ArrayList of either just this section or all child section as well as parent sections
+    */
     public static ArrayList<Section> gatherSections(Section givenSection)
     {
         ArrayList<Section> newList = new ArrayList();
-        if (givenSection.getContent().size() == 0)
+        if (givenSection.getContent().isEmpty())
         {
             newList.add(givenSection);
             givenSection.setId(Outliner.idCount);
@@ -509,6 +545,10 @@ public class Outliner {
         return newList;
     }
     
+    /**
+    * Method to delete a section t given id within the whole outline
+     * @param index at which to delete the section
+    */
     public static void deleteAtId(int index)
     {
         ArrayList<Section> newList = new ArrayList();
@@ -525,21 +565,37 @@ public class Outliner {
         
     }
     
+    /**
+    * Method to add a section on the end of the Outline
+     * @param section object to add to the outline
+    */
     public static void addSection(Section section)
     {
         Outliner.allSections.add(section);
     }
     
+    /**
+    * Method to remove the first matching section from the Outline
+     * @param section object to remove from the outline
+    */
     public static void removeSection(Section section)
     {
         Outliner.allSections.remove(section);
     }
     
+    /**
+    * Method in high demand, returns a list of all sections in the outline
+     * @return ArrayList of all sections currently loaded
+    */
     public static ArrayList<Section> getAllSections()
     {
         return Outliner.allSections;
     }
     
+    /**
+    * Method to return all real Sections ignoring empty containers (Not in use)
+     * @return ArrayList of all visible sections currently loaded
+    */
     public static ArrayList<Section> getAllNotHidden()
     {
         ArrayList myList = new ArrayList();
@@ -553,16 +609,28 @@ public class Outliner {
         return myList;
     }
     
+    /**
+    * Method to return sections in this Outliner object
+     * @return ArrayList of all top-level sections
+    */
     public ArrayList<Section> getSections() 
     {
         return this.sections;
     }
 
+    /**
+    * Method to set a new list to list of top-level sections
+     * @param sections new list to set to
+    */
     public void setSections(ArrayList<Section> sections) 
     {
         this.sections = sections;
     }
     
+    /**
+    * Method to return how many sections are currently in the outline
+     * @return int of sections loaded
+    */
     public static int getSectionCount()
     {
         return Outliner.sectionCount;
@@ -570,6 +638,11 @@ public class Outliner {
     
     // Gives each section a unqiue ID, should not go down, as
     // it may lead to two sections having the same id
+    /**
+    * Method to increment or decrement the number of sections in the outline
+     * @param value by which to change the current count
+     * @return number of sections before the change
+    */
     public static int setSectionCount(int value)
     {
         int oldSectionCount = Outliner.sectionCount;
@@ -577,6 +650,10 @@ public class Outliner {
         return oldSectionCount;
     }
     
+    /**
+    * Method to set a section in the top level at index 0 within this object
+     * @param id of the section to move to index 0 within this object
+    */
     public void setLeadingSection (int id)
     {
         ArrayList newList = new ArrayList();
@@ -591,6 +668,13 @@ public class Outliner {
         this.sections = newList;
     }
     
+    /**
+    * Method to set a section at certain index within this object
+    * This method WILL delete the section at the end of this object container
+    * because it is used when the section IS created at the end of the container
+     * @param givenSection the section to set to the new index
+     * @param newID the new index to move the section to
+    */
     public void setMiddleSection (Section givenSection, int newID)
     {
         ArrayList newList = new ArrayList();
@@ -606,6 +690,13 @@ public class Outliner {
         this.sections = newList;
     }
     
+    /**
+    * Method to set a section at certain index within this object
+    * This method will NOT delete the section at the end of this object container
+    * because it is used when the section is NOT created at the end of the container
+     * @param givenSection the section to set to the new index
+     * @param newID the new index to move the section to
+    */
     public void setMiddleSectionWithoutCreate(Section givenSection, int newID)
     {
         ArrayList newList = new ArrayList();

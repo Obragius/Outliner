@@ -33,37 +33,77 @@ import javax.swing.JScrollPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 /**
- *
- * @author lolki
+ * This is a View Class which is used to show the outline to the user
+ * @author k1801606
  */
 public class SwingGUI extends JFrame implements MouseListener, KeyListener
 {
     // Main frame of the program
+    /**
+    * The frame for the GUI
+    */
     private JFrame myFrame;
     // The panel which contains all the labels with the sections
+    /**
+    * The panel for the GUI
+    */
     private JPanel myPanel;
     // The scroll pane to allow for scrolling
+    /**
+    * The pane user for scrolling the GUI
+    */
     private JScrollPane myScrollPane;
     // ArrayList which contains all Jlabels, it is proceduraly generated
     // by accessing the outliner object
+    /**
+    * The container for all the labels in the GUI
+    */
     private ArrayList<JLabel> allJLabels;
     // Holds the outline object so that it can be accessed
     // anywhere within the class
+    /**
+    * The outline currently loaded in the GUI
+    */
     private Outliner myOutline;
     // Boolean value to allow for backspace to be pressed down and
     // work with keyTyped method
+    /**
+    * The flag for pressed backspace
+    */
     private boolean backspace;
     // to keep track of the type character
+    /**
+    * The flag for typing character
+    */
     private boolean typeChar;
     // to keep track of the index at which typing character is
+    /**
+    * The index for typing character
+    */
     private int typeIndex;
     // to keep track of ctrl press
+    /**
+    * The flag for Ctrl key
+    */
     private boolean ctrl;
     // this will keep track if there was an update
+    /**
+    * The flag for a change in the model
+    */
     private boolean changeMade;
     // this is the local timer
+    /**
+    * The timer for the typing character
+    */
     private Timer typingSpace;
     
+    /**
+    * This is the main method for the GUI, it is called by the Outliner and 
+    * returns the GUI object constructed
+     * @param args main args provided
+     * @param Outline for which to create the GUI object
+     * @return SwingGUI object constructed
+    */
     public static SwingGUI main(String[] args, Outliner Outline)
     {
         // Initiates the GUI object with the Outline provided
@@ -71,6 +111,13 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         return myGUI;
     }
     
+    /**
+    * This is the constructor, it sets up the basic frame in which the application
+    * will be displayed
+    * It also sets up the timer for the typing character and menu bar
+    * At the end it calls the draw method
+     * @param Outline for which to create the GUI object
+    */
     public SwingGUI(Outliner Outline)
     {
        // Basic setup for the frame
@@ -183,6 +230,11 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     }
     
     //method which will load a saved outline
+    /**
+    * This a menu bar method to load a saved outline
+     * @param e ActionEvent of the event fired
+     * @throws java.net.URISyntaxException indicate that a string could not be parsed as a URI reference
+    */
     public void loadItemEvent(ActionEvent e) throws URISyntaxException
     {
         String value = JOptionPane.showInputDialog(this.myFrame,"Enter file name","My Outline");
@@ -202,13 +254,23 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         }
     }
     
+    
     // this method will call to save the current outline
+    /**
+    * This a menu bar method to save a current outline
+     * @throws java.net.URISyntaxException indicate that a string could not be parsed as a URI reference
+     * @throws java.io.IOException File in file system exception
+    */
     public void saveItemEvent() throws URISyntaxException, IOException
     {
         Outliner.saveToJSON(this.myOutline);
     }
     
     // this method will create new outline and load it
+    /**
+    * This a menu bar method to create and load a new Outline
+     * @param e ActionEvent of the event fired
+    */
     public void newItemEvent(ActionEvent e)
     {
         Outliner Outline = new Outliner();
@@ -226,6 +288,9 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         }
     }
     
+    /**
+    * This a menu bar method to add or delete a user to a section 
+    */
     public void addUserEvent()
     {
         String value = JOptionPane.showInputDialog(this.myFrame,"Enter user name","");
@@ -246,6 +311,9 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         }
     }
     
+    /**
+    * This a menu bar method to add a tag to a section 
+    */
     public void addTagEvent()
     {
         String value = JOptionPane.showInputDialog(this.myFrame,"Enter new tag","");
@@ -259,6 +327,9 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         }
     }
     
+    /**
+    * This a menu bar method to delete a tag from a section 
+    */
     public void removeTagEvent()
     {
         String value = JOptionPane.showInputDialog(this.myFrame,"Enter new tag","");
@@ -272,6 +343,9 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         }
     }
     
+    /**
+    * This a menu bar method to add or delete a date to a section 
+    */
     public void editDateEvent()
     {
         String value = JOptionPane.showInputDialog(this.myFrame,"Enter new date","");
@@ -280,7 +354,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
            if (Outliner.getSelected() != -1)
            {
                Section givenSection = Outliner.getAllSections().get(Outliner.getSelected());
-               if (value == "")
+               if (value.equals(""))
                {
                    givenSection.setDate(null);
                }
