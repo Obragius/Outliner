@@ -275,7 +275,6 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     {
         Outliner Outline = new Outliner();
         String value = JOptionPane.showInputDialog(this.myFrame,"Enter file name","My Outline");
-        System.out.println(value);
         if (value != null && value != "")
         {
             this.myOutline = Outline;
@@ -683,7 +682,6 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
         // Handle create top level section at the outline
         if (e.getKeyCode() == 10 && Outliner.getSelected() == -1)
         {
-            System.out.println(Outliner.getSelected());
             this.myOutline.createSection("", null, Outliner.getSectionCount());
             Section newSection = this.myOutline.getSections().get(this.myOutline.getSections().size()-1);
             this.myOutline.setLeadingSection(this.myOutline.getSections().size()-1);
@@ -703,6 +701,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
             if (Outliner.getAllSections().isEmpty() == false)
             {
                 Outliner.setSelected(0);
+                this.typeChar = false;
                 this.myOutline.resetSelected();
             }
         }
@@ -732,7 +731,6 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
     public void keyHandler(KeyEvent e, int keyDetector) throws JsonProcessingException, IOException, URISyntaxException
     {
         this.typingSpace.stop();
-        System.out.println(e.getKeyCode());
         int sectionId = Outliner.getSelected();
         if (sectionId != -1)
         {
