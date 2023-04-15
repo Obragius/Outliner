@@ -13,6 +13,8 @@ import uk.ac.kingston.ci5105.outliner.Model.*;
 import uk.ac.kingston.ci5105.outliner.View.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -343,6 +345,26 @@ public class Outliner {
         Outliner.reassignId(myOutline);
         Outliner.sectionCount = Outliner.getAllSections().size();
         Outliner.myGUI.setOutline(myOutline);
+    }
+    
+    /**
+    * Method to load look for an outline that has text like the string supplied
+    * of previous and next state load calls
+     * @param value String which we are looking for
+     * @return null or Section where the text is like
+    */
+    public static Section lookForText(String value)
+    {
+       Pattern myPattern = Pattern.compile(".*"+value+".*");
+       for (int i = 0; i < Outliner.getAllSections().size();i++)
+       {
+           Matcher matcher = myPattern.matcher(Outliner.getAllSections().get(i).getText());
+           if (matcher.find())
+           {
+               return Outliner.getAllSections().get(i);
+           }
+       }
+       return null;
     }
     
     /**

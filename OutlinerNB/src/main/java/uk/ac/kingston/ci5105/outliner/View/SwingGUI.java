@@ -153,6 +153,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        JMenuItem addTag = new JMenuItem("Add Tag");
        JMenuItem removeTag = new JMenuItem("Remove Tag");
        JMenuItem editDate = new JMenuItem("Edit Date");
+       JMenuItem findText = new JMenuItem("Find Text");
        ActionListener controlLoadItem = (ActionEvent e) -> {
            try {
                loadItemEvent(e);
@@ -207,6 +208,12 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                editDateEvent();
            }
        };
+       ActionListener controlFindText = new ActionListener() { 
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               findTextEvent();
+           }
+       };
        loadItem.addActionListener(controlLoadItem);
        saveItem.addActionListener(controlSaveItem);
        newItem.addActionListener(controlNewItem);
@@ -214,10 +221,12 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
        addTag.addActionListener(controlAddTag);
        removeTag.addActionListener(controlRemoveTag);
        editDate.addActionListener(controlEditDate);
+       findText.addActionListener(controlFindText);
        
        fileMenu.add(loadItem);
        fileMenu.add(saveItem);
        fileMenu.add(newItem);
+       fileMenu.add(findText);
        sectionMenu.add(userEdit);
        sectionMenu.add(addTag);
        sectionMenu.add(removeTag);
@@ -362,6 +371,25 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 givenSection.setDate(value);
                }
            }
+        }
+    }
+    
+    /**
+    * This a menu bar method to search for a section with some text
+    */
+    public void findTextEvent()
+    {
+        String value = JOptionPane.showInputDialog(this.myFrame,"Enter new tag","");
+        if (value != null && value != "")
+        {
+            Section foundSection = Outliner.lookForText(value);
+            if (foundSection != null)
+            {
+                Outliner.setSelected(foundSection.getId());
+                this.typeIndex = Outliner.getAllSections().get(Outliner.getSelected()).getText().length();
+                this.typeChar = false;
+                this.myOutline.resetSelected();
+            }
         }
     }
     
@@ -1061,12 +1089,18 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                     Section mySection = Outliner.getAllSections().get(sectionId);
                     if (mySection.isHidden() == false)
                     {
+                        try 
+                        {
                         String myOldText = mySection.getText();
                         String leftText = myOldText.substring(0, this.typeIndex);
                         String rightText = myOldText.substring(this.typeIndex);
                         String myNewText = leftText+"|"+rightText;
                         mySection.editText(myNewText);
                         this.typeChar = true;
+                        } catch (StringIndexOutOfBoundsException e)
+                        {
+                            System.out.println("String fault");
+                        }
                     }
                 }
                 reDrawScreen();
