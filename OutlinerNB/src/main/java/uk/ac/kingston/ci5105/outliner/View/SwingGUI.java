@@ -525,7 +525,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
             user += givenSection.getUser().get(0).getName();
             JLabel userLabel = new JLabel();
             userLabel.setOpaque(true);
-            userLabel.setFont(new Font("Verdana",Font.ITALIC,12));
+            userLabel.setFont(new Font("Verdana",Font.ITALIC,16));
             userLabel.setText(emptyText+user);
             if (givenSection.isSelected())
             {
@@ -543,7 +543,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
             }
             JLabel tagsLabel = new JLabel();
             tagsLabel.setOpaque(true);
-            tagsLabel.setFont(new Font("Verdana",Font.ITALIC,12));
+            tagsLabel.setFont(new Font("Verdana",Font.ITALIC,16));
             tagsLabel.setText(emptyText+manyTags);
             if (givenSection.isSelected())
             {
@@ -558,7 +558,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
             date += givenSection.getDate();
             JLabel dateLabel = new JLabel();
             dateLabel.setOpaque(true);
-            dateLabel.setFont(new Font("Verdana",Font.ITALIC,12));
+            dateLabel.setFont(new Font("Verdana",Font.ITALIC,16));
             dateLabel.setText(emptyText+date);
             if (givenSection.isSelected())
             {
@@ -584,6 +584,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 myLabel.setText(addedText+givenSection.getText()+completedTag);
                 Integer id = givenSection.getId();
                 myLabel.setName(id.toString());
+                myLabel.setFont(new Font("Calibri",Font.PLAIN,16));
                 myLabel.addMouseListener(this);
                 myLabelList.add(myLabel);
             }
@@ -612,6 +613,7 @@ public class SwingGUI extends JFrame implements MouseListener, KeyListener
                 myLabel.setText(addedText+givenSection.getText()+completedTag);
                 Integer id = givenSection.getId();
                 myLabel.setName(id.toString());
+                myLabel.setFont(new Font("Calibri",Font.PLAIN,16));
                 myLabel.addMouseListener(this);
                 myLabelList.add(myLabel);
             }
